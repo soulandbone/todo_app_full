@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
+import 'package:todos_app_full/widgets/day_selector_dialogue.dart';
 
 class AddTodo extends ConsumerStatefulWidget {
   const AddTodo({super.key});
@@ -14,6 +15,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   final List<String> frequency = ['Daily', 'Weekly', 'Specific date'];
   String _savedName = '';
   String _selectedFrequency = 'Daily';
+  List<bool> _selectedDays = [false, false, false, false, false, false, false];
 
   final formKey = GlobalKey<FormState>();
 
@@ -34,7 +36,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   void showSelectDaysDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(title: Text('this is the Dialog')),
+      builder: (context) => DaySelectorDialogue(selectedDays: _selectedDays),
     );
   }
 
@@ -46,6 +48,21 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     if (value == 'Weekly') {
       showSelectDaysDialog();
     }
+  }
+
+  void updateWeeklyDays(int index, bool newValue) {
+    List<bool> newList = [false, false, false, false, false, false, false];
+
+    for (int i = 0; i < newList.length; i++) {
+      if (i == index) {
+        newList[i] = newValue;
+      }
+    }
+
+    print('newList is $newList');
+    setState(() {
+      _selectedDays = newList;
+    });
   }
 
   @override
