@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:todos_app_full/widgets/days_item.dart';
 
 class DaySelectorDialogue extends StatefulWidget {
-  const DaySelectorDialogue({required this.selectedDays, super.key});
+  const DaySelectorDialogue({
+    required this.onAcceptDialog,
+    required this.selectedDays,
+    super.key,
+  });
 
   final List<bool> selectedDays;
+  final Function(List<bool> values) onAcceptDialog;
 
   @override
   State<DaySelectorDialogue> createState() => _DaySelectorDialogueState();
@@ -29,7 +34,7 @@ class _DaySelectorDialogueState extends State<DaySelectorDialogue> {
     super.initState();
   }
 
-  void updateWeeklyDay(int index, bool newValue) {
+  void onCheckboxSelect(int index, bool newValue) {
     List<bool> temporalList = _selectedDaysLocal;
 
     for (int i = 0; i < _selectedDaysLocal.length; i++) {
@@ -49,15 +54,21 @@ class _DaySelectorDialogueState extends State<DaySelectorDialogue> {
       title: Text('Select your days'),
       content: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             for (int i = 0; i < days.length; i++)
               DaysItem(
                 index: i,
                 label: days[i],
                 checkedValue: _selectedDaysLocal[i],
-                onSelectWeeklyDay: updateWeeklyDay,
+                onCheckBoxSelect: onCheckboxSelect,
               ),
-            TextButton(onPressed: () {}, child: Text('OK')),
+            TextButton(
+              onPressed: () {
+                widget.onAcceptDialog(_selectedDaysLocal);
+              },
+              child: Text('OK'),
+            ),
           ],
         ),
       ),

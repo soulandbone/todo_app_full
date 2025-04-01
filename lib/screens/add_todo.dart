@@ -36,7 +36,11 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   void showSelectDaysDialog() {
     showDialog(
       context: context,
-      builder: (context) => DaySelectorDialogue(selectedDays: _selectedDays),
+      builder:
+          (context) => DaySelectorDialogue(
+            onAcceptDialog: onAcceptDialog,
+            selectedDays: _selectedDays,
+          ),
     );
   }
 
@@ -50,19 +54,11 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     }
   }
 
-  void updateWeeklyDays(int index, bool newValue) {
-    List<bool> newList = [false, false, false, false, false, false, false];
-
-    for (int i = 0; i < newList.length; i++) {
-      if (i == index) {
-        newList[i] = newValue;
-      }
-    }
-
-    print('newList is $newList');
+  void onAcceptDialog(List<bool> newValues) {
     setState(() {
-      _selectedDays = newList;
+      _selectedDays = newValues;
     });
+    Navigator.of(context).pop();
   }
 
   @override
