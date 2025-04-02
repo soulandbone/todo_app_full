@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:todos_app_full/helpers/helper_function.dart';
 import 'package:todos_app_full/widgets/day_chip.dart';
 
 class DaysWrap extends StatefulWidget {
-  const DaysWrap({super.key});
+  const DaysWrap({
+    required this.listOfDays,
+    required this.onChooseDate,
+    super.key,
+  });
 
+  final Function(String label) onChooseDate;
+  final List<bool> listOfDays;
   @override
   State<DaysWrap> createState() => _DaysWrapState();
 }
@@ -17,7 +24,11 @@ class _DaysWrapState extends State<DaysWrap> {
       direction: Axis.horizontal,
       children: [
         for (int index = 0; index < days.length; index++)
-          DayChip(label: days[index]),
+          DayChip(
+            label: days[index],
+            onChooseDate: widget.onChooseDate,
+            listOfDays: widget.listOfDays,
+          ),
       ],
     );
   }

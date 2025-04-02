@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:todos_app_full/helpers/helper_function.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/widgets/conditional_container.dart';
@@ -29,15 +31,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
   String get selectedDateString => DateFormat.MMMMd().format(_selectedDate);
 
-  final List<bool> _selectedDays = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
+  List<bool> _selectedDays = [false, false, false, false, false, false, false];
 
   final formKey = GlobalKey<FormState>();
 
@@ -68,6 +62,20 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     });
   }
 
+  void onChooseDates(String label) {
+    List<bool> newList = List.from(_selectedDays);
+
+    int index = FunctionHelpers.checkIndexByLabel(label);
+
+    if (index != -1) {
+      newList[index] = !_selectedDays[index];
+    }
+    setState(() {
+      _selectedDays = newList;
+    });
+    //print(_selectedDays);
+  }
+
   Future<void> openDatePicker(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -91,7 +99,14 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     if (dateHasBeenSelected && selectSpecificDateIsActive) {
       content = ConditionalContainer(childWidget: Text(selectedDateString));
     } else if (_selectedFrequency == 'Weekly') {
-      content = Expanded(child: ConditionalContainer(childWidget: DaysWrap()));
+      content = Expanded(
+        child: ConditionalContainer(
+          childWidget: DaysWrap(
+            onChooseDate: onChooseDates,
+            listOfDays: _selectedDays,
+          ),
+        ),
+      );
     }
 
     return Scaffold(
