@@ -19,4 +19,14 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   void removeTodo(Todo todo) {
     var newState = state.where((element) => (element.id != todo.id));
   }
+
+  void updateState(Todo todo) {
+    List<Todo> newState = List.from(state);
+
+    var index = state.indexWhere((element) => element.id == todo.id);
+
+    newState[index].isCompleted = !state[index].isCompleted;
+
+    state = newState;
+  }
 }

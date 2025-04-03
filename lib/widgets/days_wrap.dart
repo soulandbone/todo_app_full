@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todos_app_full/helpers/helper_function.dart';
+
 import 'package:todos_app_full/widgets/day_chip.dart';
 
 class DaysWrap extends StatefulWidget {
