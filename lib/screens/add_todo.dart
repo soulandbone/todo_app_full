@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app_full/helpers/helper_function.dart';
+import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/widgets/conditional_container.dart';
@@ -24,7 +26,6 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   final List<String> frequency = ['Daily', 'Weekly', 'Specific date'];
   String _savedName = '';
   String _selectedFrequency = 'Daily';
-  //DateTime _selectedDate = DateTime.now();
   bool dateHasBeenSelected = false;
   bool selectSpecificDateIsActive = false;
   late DateTime _selectedDate;
@@ -45,7 +46,9 @@ class _AddTodoState extends ConsumerState<AddTodo> {
         frequency: _selectedFrequency,
       );
 
-      ref.read(todosProvider.notifier).addTodo(newTodo, context);
+      var box = Hive.box<Todo>(todoBox);
+
+      ref.read(todosProvider.notifier).addTodo(newTodo, context, box);
     }
   }
 
@@ -97,7 +100,16 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     Widget content = ConditionalContainer(childWidget: SizedBox.shrink());
 
     if (dateHasBeenSelected && selectSpecificDateIsActive) {
-      content = ConditionalContainer(childWidget: Text(selectedDateString));
+      content = Expanded(
+        child: Center(
+          child: ConditionalContainer(
+            childWidget: Text(
+              selectedDateString,
+              style: TextStyle(color: Colors.green, fontSize: 18),
+            ),
+          ),
+        ),
+      );
     } else if (_selectedFrequency == 'Weekly') {
       content = Expanded(
         child: ConditionalContainer(

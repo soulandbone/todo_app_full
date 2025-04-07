@@ -1,8 +1,9 @@
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
 
-class Todo {
+class Todo extends HiveObject {
   Todo({
     required this.title,
     required this.isCompleted,

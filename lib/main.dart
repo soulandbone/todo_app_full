@@ -1,9 +1,20 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+
+import 'package:todos_app_full/hive/hive_registrar.g.dart';
+import 'package:todos_app_full/hive_boxes.dart';
+import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/screens/first_screen.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+
+  Hive.registerAdapters();
+
+  await Hive.openBox<Todo>(todoBox);
+
   runApp(ProviderScope(child: const MyApp()));
 }
 

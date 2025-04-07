@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 
 final todosProvider = StateNotifierProvider((ref) {
@@ -7,17 +9,20 @@ final todosProvider = StateNotifierProvider((ref) {
 });
 
 class TodosNotifier extends StateNotifier<List<Todo>> {
-  TodosNotifier() : super([]);
+  TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
-  void addTodo(Todo todo, BuildContext context) {
+  void addTodo(Todo todo, BuildContext context, Box<Todo> box) {
     var newState = [todo, ...state];
     state = newState;
     Navigator.of(context).pop();
-    print('State is ${state[0].title}');
+    box.put(todo.id, todo);
   }
 
-  void removeTodo(Todo todo) {
-    var newState = state.where((element) => (element.id != todo.id));
+  void removeTodo(Todo todo, Box<Todo> box) {
+    var newState = state.where((element) => (element.id != todo.id)).toList();
+
+    state = newState;
+    box.delete(todo.key);
   }
 
   void updateState(Todo todo) {
