@@ -11,27 +11,39 @@ final todosProvider = StateNotifierProvider((ref) {
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
-  void addTodo(Todo todo, BuildContext context, Box<Todo> box) {
+  void addTodo(Todo todo, BuildContext context, Box<Todo> box) async {
     var newState = [todo, ...state];
     state = newState;
     Navigator.of(context).pop();
-    box.put(todo.id, todo);
+    await box.add(todo);
   }
 
-  void removeTodo(Todo todo, Box<Todo> box) {
+  void removeTodo(Todo todo, Box<Todo> box) async {
     var newState = state.where((element) => (element.id != todo.id)).toList();
 
     state = newState;
-    box.delete(todo.key);
+    await box.delete(todo.key);
   }
 
-  void updateState(Todo todo) {
+  void clearTodos(Box<Todo> box) async {
+    state = [];
+    await box.clear();
+  }
+
+  void updateState(Todo todo, Box<Todo> box) async {
     List<Todo> newState = List.from(state);
 
     var index = state.indexWhere((element) => element.id == todo.id);
 
+    Todo updatedTodo = Todo(
+      title: todo.title,
+      isCompleted: !todo.isCompleted,
+      frequency: todo.frequency,
+    );
+
     newState[index].isCompleted = !state[index].isCompleted;
 
     state = newState;
+    await box.putAt(index, updatedTodo);
   }
 }

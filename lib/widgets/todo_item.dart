@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:todos_app_full/helpers/helper_function.dart';
 import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
@@ -23,14 +24,21 @@ class TodoItem extends ConsumerWidget {
           ref.read(todosProvider.notifier).removeTodo(todo, box);
         },
         child: ListTile(
-          title: Text(todo.title, style: TextStyle(color: Colors.white)),
-          subtitle: Text('Frequency: Mo, Tu, We, Th'),
+          title: Text(todo.title, style: TextStyle(color: Colors.black)),
+          subtitle: Text(
+            todo.specificDate != null
+                ? todo.specificDate.toString()
+                : todo.specificDays == null
+                ? 'Daily'
+                : FunctionHelpers.checkDaysSelected(todo.specificDays!),
+            style: TextStyle(color: Colors.black),
+          ),
           trailing: Checkbox(
             side: BorderSide(color: Colors.green),
             activeColor: Colors.red,
             value: todo.isCompleted,
             onChanged: (value) {
-              ref.read(todosProvider.notifier).updateState(todo);
+              ref.read(todosProvider.notifier).updateState(todo, box);
             },
           ),
         ),

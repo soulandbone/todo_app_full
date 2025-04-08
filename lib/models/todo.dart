@@ -8,10 +8,14 @@ class Todo extends HiveObject {
     required this.title,
     required this.isCompleted,
     required this.frequency,
+    this.specificDays,
+    this.specificDate,
   }) : id = uuid.v4();
 
   final String id;
   final String title;
   bool isCompleted;
   final String frequency;
+  final List<bool>? specificDays;
+  final DateTime? specificDate;
 }

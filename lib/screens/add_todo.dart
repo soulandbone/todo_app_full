@@ -39,12 +39,32 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   void onSubmit() {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      Todo newTodo;
 
-      var newTodo = Todo(
-        title: _savedName,
-        isCompleted: false,
-        frequency: _selectedFrequency,
-      );
+      if (_selectedFrequency == frequency[1]) {
+        //Weekly
+        newTodo = Todo(
+          title: _savedName,
+          isCompleted: false,
+          frequency: _selectedFrequency,
+          specificDays: _selectedDays,
+        );
+      } else if (_selectedFrequency == frequency[2]) {
+        //Specific Date
+        //Weekly
+        newTodo = Todo(
+          title: _savedName,
+          isCompleted: false,
+          frequency: _selectedFrequency,
+          specificDate: _selectedDate,
+        );
+      } else {
+        newTodo = Todo(
+          title: _savedName,
+          isCompleted: false,
+          frequency: _selectedFrequency,
+        );
+      }
 
       var box = Hive.box<Todo>(todoBox);
 
