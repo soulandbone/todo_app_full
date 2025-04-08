@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 
@@ -40,10 +41,22 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       isCompleted: !todo.isCompleted,
       frequency: todo.frequency,
     );
+    var today = DateTime.now();
+    var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 2);
+    print('Today is $dayOfTheWeek');
 
     newState[index].isCompleted = !state[index].isCompleted;
 
     state = newState;
     await box.putAt(index, updatedTodo);
+  }
+
+  List<Todo> filterByDay(List<Todo> list) {
+    var today = DateTime.now();
+    var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 1);
+
+    for (Todo todo in state) {}
+
+    return [Todo(title: 'b;ab', isCompleted: true, frequency: 'Weekly')];
   }
 }

@@ -1,3 +1,5 @@
+enum Frequency { daily, weekly, specific }
+
 class FunctionHelpers {
   static int checkIndexByLabel(String label) {
     int index = 0;

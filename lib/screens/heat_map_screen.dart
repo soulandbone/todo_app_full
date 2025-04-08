@@ -11,6 +11,13 @@ class HeatMapScreen extends StatelessWidget {
       body: Center(
         child: HeatMapCalendar(
           flexible: true,
+          datasets: {
+            DateTime(2025, 4, 1): 3,
+            DateTime(2025, 4, 3): 7,
+            DateTime(2025, 4, 4): 10,
+            DateTime(2025, 4, 5): 13,
+            DateTime(2025, 4, 6): 6,
+          },
           colorsets: {
             1: Colors.red,
             3: Colors.orange,
