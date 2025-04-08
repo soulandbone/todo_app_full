@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:todos_app_full/helpers/helper_function.dart';
 import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
@@ -13,6 +14,7 @@ class TodoItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var formatter = DateFormat.MMMd();
     var box = Hive.box<Todo>(todoBox);
     return Card(
       elevation: 4,
@@ -24,12 +26,15 @@ class TodoItem extends ConsumerWidget {
           ref.read(todosProvider.notifier).removeTodo(todo, box);
         },
         child: ListTile(
-          title: Text(todo.title, style: TextStyle(color: Colors.black)),
+          title: Text(
+            todo.title,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
           subtitle: Text(
             todo.specificDate != null
-                ? todo.specificDate.toString()
+                ? formatter.format(todo.specificDate!)
                 : todo.specificDays == null
-                ? 'Daily'
+                ? ' Daily'
                 : FunctionHelpers.checkDaysSelected(todo.specificDays!),
             style: TextStyle(color: Colors.black),
           ),
