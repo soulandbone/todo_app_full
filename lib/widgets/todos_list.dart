@@ -10,13 +10,17 @@ class TodosList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Todo> todosList = ref.watch(todosProvider);
+    List<Todo> filteredList = ref
+        .watch(todosProvider.notifier)
+        .filterByDay(todosList);
 
     Widget content =
-        todosList.isEmpty
+        filteredList.isEmpty
             ? Center(child: Text('There are no to-dos'))
             : ListView.builder(
-              itemCount: todosList.length,
-              itemBuilder: (context, index) => TodoItem(todo: todosList[index]),
+              itemCount: filteredList.length,
+              itemBuilder:
+                  (context, index) => TodoItem(todo: filteredList[index]),
             );
 
     return content;

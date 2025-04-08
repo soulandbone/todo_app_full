@@ -1,7 +1,10 @@
 import 'package:hive_ce_flutter/hive_flutter.dart';
+
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
+
+enum Frequency { daily, weekly, specific }
 
 class Todo extends HiveObject {
   Todo({
@@ -15,7 +18,7 @@ class Todo extends HiveObject {
   final String id;
   final String title;
   bool isCompleted;
-  final String frequency;
+  final Frequency frequency;
   final List<bool>? specificDays;
   final DateTime? specificDate;
 }

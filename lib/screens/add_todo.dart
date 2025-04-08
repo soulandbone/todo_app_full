@@ -23,14 +23,13 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   final today = DateTime.now();
   final oneYearFromNow = DateTime(DateTime.now().year + 1);
 
-  final List<String> frequency = ['Daily', 'Weekly', 'Specific date'];
   String _savedName = '';
-  String _selectedFrequency = 'Daily';
+  Frequency _selectedFrequency = Frequency.daily;
   bool dateHasBeenSelected = false;
   bool selectSpecificDateIsActive = false;
   late DateTime _selectedDate;
 
-  String get selectedDateString => DateFormat.MMMMd().format(_selectedDate);
+  String get selectedDateString => DateFormat.yMd().format(_selectedDate);
 
   List<bool> _selectedDays = [false, false, false, false, false, false, false];
 
@@ -41,17 +40,17 @@ class _AddTodoState extends ConsumerState<AddTodo> {
       formKey.currentState!.save();
       Todo newTodo;
 
-      if (_selectedFrequency == frequency[1]) {
+      if (_selectedFrequency == Frequency.weekly) {
         //Weekly
+        print('Weekly has been selected');
         newTodo = Todo(
           title: _savedName,
           isCompleted: false,
           frequency: _selectedFrequency,
           specificDays: _selectedDays,
         );
-      } else if (_selectedFrequency == frequency[2]) {
-        //Specific Date
-        //Weekly
+      } else if (_selectedFrequency == Frequency.specific) {
+        print('specific  has been selected');
         newTodo = Todo(
           title: _savedName,
           isCompleted: false,
@@ -59,6 +58,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
           specificDate: _selectedDate,
         );
       } else {
+        print('Daily has been selected');
         newTodo = Todo(
           title: _savedName,
           isCompleted: false,
@@ -72,14 +72,14 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     }
   }
 
-  void onFrequencyChange(String value) {
+  void onFrequencyChange(Frequency value) {
     setState(() {
       _selectedFrequency = value;
-      if (_selectedFrequency == 'Specific date') {
+      if (_selectedFrequency == Frequency.specific) {
         selectSpecificDateIsActive = true;
         openDatePicker(context);
-      } else if (_selectedFrequency == 'Daily' ||
-          _selectedFrequency == 'Weekly') {
+      } else if (_selectedFrequency == Frequency.daily ||
+          _selectedFrequency == Frequency.weekly) {
         selectSpecificDateIsActive = false;
       }
     });
@@ -130,7 +130,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
           ),
         ),
       );
-    } else if (_selectedFrequency == 'Weekly') {
+    } else if (_selectedFrequency == Frequency.weekly) {
       content = Expanded(
         child: ConditionalContainer(
           childWidget: DaysWrap(
@@ -176,10 +176,12 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                       child: DropdownButton(
                         value: _selectedFrequency,
                         items:
-                            frequency.map((frequency) {
+                            Frequency.values.map((frequency) {
                               return DropdownMenuItem(
                                 value: frequency,
-                                child: Text(frequency),
+                                child: Text(
+                                  FunctionHelpers.enumToString(frequency),
+                                ),
                               );
                             }).toList(),
                         onChanged: (value) {

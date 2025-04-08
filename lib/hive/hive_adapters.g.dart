@@ -19,7 +19,7 @@ class TodoAdapter extends TypeAdapter<Todo> {
     return Todo(
       title: fields[0] as String,
       isCompleted: fields[1] as bool,
-      frequency: fields[2] as String,
+      frequency: fields[2] as Frequency,
       specificDays: (fields[3] as List?)?.cast<bool>(),
       specificDate: fields[4] as DateTime?,
     );
@@ -48,6 +48,47 @@ class TodoAdapter extends TypeAdapter<Todo> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TodoAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class FrequencyAdapter extends TypeAdapter<Frequency> {
+  @override
+  final int typeId = 1;
+
+  @override
+  Frequency read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return Frequency.daily;
+      case 1:
+        return Frequency.weekly;
+      case 2:
+        return Frequency.specific;
+      default:
+        return Frequency.daily;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, Frequency obj) {
+    switch (obj) {
+      case Frequency.daily:
+        writer.writeByte(0);
+      case Frequency.weekly:
+        writer.writeByte(1);
+      case Frequency.specific:
+        writer.writeByte(2);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FrequencyAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:todos_app_full/helpers/helper_function.dart';
 import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
+
+var formatter = DateFormat.yMd();
+var today = DateTime.now();
 
 final todosProvider = StateNotifierProvider((ref) {
   return TodosNotifier();
@@ -41,9 +45,6 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       isCompleted: !todo.isCompleted,
       frequency: todo.frequency,
     );
-    var today = DateTime.now();
-    var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 2);
-    print('Today is $dayOfTheWeek');
 
     newState[index].isCompleted = !state[index].isCompleted;
 
@@ -52,11 +53,26 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   }
 
   List<Todo> filterByDay(List<Todo> list) {
-    var today = DateTime.now();
-    var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 1);
+    var formattedToday = formatter.format(today);
+    var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 2);
+    var index = FunctionHelpers.checkIndexByLabel(dayOfTheWeek);
+    print('day of the week is $dayOfTheWeek');
+    List<Todo> filteredList = [];
 
-    for (Todo todo in state) {}
+    for (Todo todo in state) {
+      if (todo.frequency == Frequency.daily) {
+        filteredList.add(todo);
+      } else if (todo.frequency == Frequency.weekly &&
+          todo.specificDays != null &&
+          todo.specificDays![index]) {
+        filteredList.add(todo);
+      } else if (todo.frequency == Frequency.specific &&
+          todo.specificDate != null &&
+          formatter.format(todo.specificDate!) == formattedToday) {
+        filteredList.add(todo);
+      }
+    }
 
-    return [Todo(title: 'b;ab', isCompleted: true, frequency: 'Weekly')];
+    return filteredList;
   }
 }

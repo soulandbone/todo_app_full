@@ -7,6 +7,7 @@ import 'package:todos_app_full/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(FrequencyAdapter());
     registerAdapter(TodoAdapter());
   }
 }

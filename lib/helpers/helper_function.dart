@@ -1,25 +1,31 @@
-enum Frequency { daily, weekly, specific }
+import 'package:todos_app_full/models/todo.dart';
 
 class FunctionHelpers {
   static int checkIndexByLabel(String label) {
+    // Depending on the label, says which
     int index = 0;
     switch (label) {
       case 'Mo':
         index = 0;
+        break;
       case 'Tu':
         index = 1;
+        break;
       case 'We':
         index = 2;
+        break;
       case 'Th':
         index = 3;
+        break;
       case 'Fr':
         index = 4;
+        break;
       case 'Sa':
         index = 5;
+        break;
       case 'Su':
         index = 6;
-      default:
-        index = -1;
+        break;
     }
     return index;
   }
@@ -64,5 +70,16 @@ class FunctionHelpers {
       variable = variable + list[i] + (' ');
     }
     return variable;
+  }
+
+  static String enumToString(Frequency frequency) {
+    switch (frequency) {
+      case Frequency.daily:
+        return 'Daily';
+      case Frequency.weekly:
+        return 'Weekly';
+      case Frequency.specific:
+        return 'Specific Date';
+    }
   }
 }
