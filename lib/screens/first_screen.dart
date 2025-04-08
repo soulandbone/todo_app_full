@@ -5,6 +5,7 @@ import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/screens/add_todo.dart';
+import 'package:todos_app_full/widgets/drawer.dart';
 import 'package:todos_app_full/widgets/todos_list.dart';
 
 class FirstScreen extends ConsumerWidget {
@@ -14,6 +15,7 @@ class FirstScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var box = Hive.box<Todo>(todoBox);
     return Scaffold(
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: Text('My Todos'),
         actions: [
