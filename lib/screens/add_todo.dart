@@ -42,7 +42,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
       if (_selectedFrequency == Frequency.weekly) {
         //Weekly
-        print('Weekly has been selected');
+        //print('Weekly has been selected');
         newTodo = Todo(
           title: _savedName,
           isCompleted: false,
@@ -50,7 +50,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
           specificDays: _selectedDays,
         );
       } else if (_selectedFrequency == Frequency.specific) {
-        print('specific  has been selected');
+        // print('specific  has been selected');
         newTodo = Todo(
           title: _savedName,
           isCompleted: false,
@@ -58,13 +58,13 @@ class _AddTodoState extends ConsumerState<AddTodo> {
           specificDate: _selectedDate,
         );
       } else {
-        print('Daily has been selected');
+        //print('Daily has been selected');
         newTodo = Todo(
           title: _savedName,
           isCompleted: false,
           frequency: _selectedFrequency,
         );
-        print(_selectedFrequency);
+        // print(_selectedFrequency);
       }
 
       var box = Hive.box<Todo>(todoBox);

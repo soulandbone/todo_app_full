@@ -22,5 +22,5 @@ class Todo extends HiveObject {
   final Frequency frequency;
   final List<bool>? specificDays;
   final DateTime? specificDate;
-  final DateTime? completedDate;
+  DateTime? completedDate;
 }

@@ -66,11 +66,12 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
 
     newState[index].isCompleted = !state[index].isCompleted;
 
+    if (newState[index].isCompleted) {
+      newState[index].completedDate = DateTime.now();
+    }
+
     state = newState;
     await box.putAt(index, updatedTodo);
-    if (newState[index].isCompleted) {
-      print('This line is executing');
-    }
   }
 
   //********************************************************************************************* */
@@ -82,7 +83,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
 
     List<Todo> filteredList = [];
 
-    print('length of state is ${state.length}');
+    print('formatted day today is ${formatter.format(today)}');
 
     for (Todo todo in list) {
       if (todo.frequency == Frequency.daily) {
