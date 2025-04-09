@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
       darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
-      home: const FirstScreen(),
+      home: FirstScreen(),
     );
   }
 }

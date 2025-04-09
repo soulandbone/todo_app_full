@@ -5,7 +5,9 @@ import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/widgets/todo_item.dart';
 
 class TodosList extends ConsumerWidget {
-  const TodosList({super.key});
+  const TodosList({required this.all, super.key});
+
+  final bool all;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,13 +16,21 @@ class TodosList extends ConsumerWidget {
         .watch(todosProvider.notifier)
         .filterByDay(todosList);
 
+    final List<Todo> activeList;
+
+    if (all) {
+      activeList = todosList;
+    } else {
+      activeList = filteredList;
+    }
+
     Widget content =
-        filteredList.isEmpty
+        activeList.isEmpty
             ? Center(child: Text('There are no to-dos'))
             : ListView.builder(
-              itemCount: filteredList.length,
+              itemCount: activeList.length,
               itemBuilder:
-                  (context, index) => TodoItem(todo: filteredList[index]),
+                  (context, index) => TodoItem(todo: activeList[index]),
             );
 
     return content;
