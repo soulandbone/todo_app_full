@@ -27,13 +27,10 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   }
 
   //**********************************************************************
-  void addTodo(Todo todo, BuildContext context, Box<Todo> box) async {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('You added a new Todo')));
+  void addTodo(Todo todo, Box<Todo> box) async {
     var newState = [todo, ...state];
     state = newState;
-    Navigator.of(context).pop();
+
     await box.add(todo);
   }
 
@@ -62,6 +59,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       title: todo.title,
       isCompleted: !todo.isCompleted,
       frequency: todo.frequency,
+      creationDate: todo.creationDate,
     );
 
     newState[index].isCompleted = !state[index].isCompleted;

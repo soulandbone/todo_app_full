@@ -38,38 +38,25 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   void onSubmit() {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      Todo newTodo;
 
-      if (_selectedFrequency == Frequency.weekly) {
-        //Weekly
-        //print('Weekly has been selected');
-        newTodo = Todo(
-          title: _savedName,
-          isCompleted: false,
-          frequency: _selectedFrequency,
-          specificDays: _selectedDays,
-        );
-      } else if (_selectedFrequency == Frequency.specific) {
-        // print('specific  has been selected');
-        newTodo = Todo(
-          title: _savedName,
-          isCompleted: false,
-          frequency: _selectedFrequency,
-          specificDate: _selectedDate,
-        );
-      } else {
-        //print('Daily has been selected');
-        newTodo = Todo(
-          title: _savedName,
-          isCompleted: false,
-          frequency: _selectedFrequency,
-        );
-        // print(_selectedFrequency);
-      }
+      var newTodo = Todo(
+        title: _savedName,
+        isCompleted: false,
+        frequency: _selectedFrequency,
+        creationDate: DateTime.now(),
+        specificDays:
+            (_selectedFrequency == Frequency.weekly) ? _selectedDays : null,
+        specificDate:
+            (_selectedFrequency == Frequency.specific) ? _selectedDate : null,
+      );
 
       var box = Hive.box<Todo>(todoBox);
 
-      ref.read(todosProvider.notifier).addTodo(newTodo, context, box);
+      ref.read(todosProvider.notifier).addTodo(newTodo, box);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('You added a new Todo')));
+      Navigator.of(context).pop();
     }
   }
 

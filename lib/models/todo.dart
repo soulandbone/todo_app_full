@@ -8,6 +8,7 @@ enum Frequency { daily, weekly, specific }
 
 class Todo extends HiveObject {
   Todo({
+    required this.creationDate,
     required this.title,
     required this.isCompleted,
     required this.frequency,
@@ -16,6 +17,7 @@ class Todo extends HiveObject {
     this.completedDate,
   }) : id = uuid.v4();
 
+  final DateTime creationDate;
   final String id;
   final String title;
   bool isCompleted;
