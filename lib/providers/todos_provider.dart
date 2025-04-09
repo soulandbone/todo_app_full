@@ -16,6 +16,17 @@ final todosProvider = StateNotifierProvider((ref) {
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
+  List<Todo> get completedTodos {
+    final List<Todo> completedTodos = [];
+    for (int i = 0; i < state.length; i++) {
+      if (state[i].isCompleted) {
+        completedTodos.add(state[i]);
+      }
+    }
+    return completedTodos;
+  }
+
+  //**********************************************************************
   void addTodo(Todo todo, BuildContext context, Box<Todo> box) async {
     ScaffoldMessenger.of(
       context,
@@ -26,6 +37,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     await box.add(todo);
   }
 
+  //**************************************************************************/
   void removeTodo(Todo todo, Box<Todo> box) async {
     var newState = state.where((element) => (element.id != todo.id)).toList();
 
@@ -33,11 +45,14 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     await box.delete(todo.key);
   }
 
+  //*************************************************************************** */
+
   void clearTodos(Box<Todo> box) async {
     state = [];
     await box.clear();
   }
 
+  //***************************************************************************** */
   void updateState(Todo todo, Box<Todo> box) async {
     List<Todo> newState = List.from(state);
 
@@ -53,13 +68,18 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
 
     state = newState;
     await box.putAt(index, updatedTodo);
+    if (newState[index].isCompleted) {
+      print('This line is executing');
+    }
   }
+
+  //********************************************************************************************* */
 
   List<Todo> filterByDay(List<Todo> list) {
     var formattedToday = formatter.format(today);
     var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 2);
     var index = FunctionHelpers.checkIndexByLabel(dayOfTheWeek);
-    print('day of the week is $dayOfTheWeek');
+
     List<Todo> filteredList = [];
 
     print('length of state is ${state.length}');
@@ -79,7 +99,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
         filteredList.add(todo);
       }
     }
-    print(filteredList);
+
     return filteredList;
   }
 }

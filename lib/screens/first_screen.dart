@@ -5,10 +5,10 @@ import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/screens/add_todo.dart';
 import 'package:todos_app_full/screens/all_todos.dart';
+import 'package:todos_app_full/screens/completed_todos.dart';
 import 'package:todos_app_full/screens/filtered_todos.dart';
 import 'package:todos_app_full/screens/heat_map_screen.dart';
 import 'package:todos_app_full/widgets/drawer.dart';
-import 'package:todos_app_full/widgets/todos_list.dart';
 
 class FirstScreen extends ConsumerStatefulWidget {
   const FirstScreen({super.key});
@@ -24,6 +24,7 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
     AllTodosScreen(),
     FilteredTodosScreen(),
     HeatMapScreen(),
+    CompletedTodosScreen(),
   ];
 
   @override
@@ -53,6 +54,8 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
       body: activeScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.red,
+        unselectedItemColor: Colors.white,
+        unselectedLabelStyle: TextStyle(color: Colors.white),
         currentIndex: _currentIndex,
         onTap: (value) {
           setState(() {
@@ -69,6 +72,10 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
             label: 'Today\'s Todos',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Heat Map'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_to_photos),
+            label: 'Completed Todos',
+          ),
         ],
       ),
     );

@@ -15,7 +15,8 @@ class TodoItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var formatter = DateFormat.MMMd();
-    var box = Hive.box<Todo>(todoBox);
+    var todosList = Hive.box<Todo>(todoBox);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -23,7 +24,7 @@ class TodoItem extends ConsumerWidget {
       child: Dismissible(
         key: ValueKey(todo.id),
         onDismissed: (direction) {
-          ref.read(todosProvider.notifier).removeTodo(todo, box);
+          ref.read(todosProvider.notifier).removeTodo(todo, todosList);
         },
         child: ListTile(
           title: Text(
@@ -43,7 +44,7 @@ class TodoItem extends ConsumerWidget {
             activeColor: Colors.red,
             value: todo.isCompleted,
             onChanged: (value) {
-              ref.read(todosProvider.notifier).updateState(todo, box);
+              ref.read(todosProvider.notifier).updateState(todo, todosList);
             },
           ),
         ),

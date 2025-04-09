@@ -22,13 +22,14 @@ class TodoAdapter extends TypeAdapter<Todo> {
       frequency: fields[2] as Frequency,
       specificDays: (fields[3] as List?)?.cast<bool>(),
       specificDate: fields[4] as DateTime?,
+      completedDate: fields[5] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Todo obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class TodoAdapter extends TypeAdapter<Todo> {
       ..writeByte(3)
       ..write(obj.specificDays)
       ..writeByte(4)
-      ..write(obj.specificDate);
+      ..write(obj.specificDate)
+      ..writeByte(5)
+      ..write(obj.completedDate);
   }
 
   @override
