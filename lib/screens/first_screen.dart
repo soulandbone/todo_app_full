@@ -29,7 +29,6 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var box = Hive.box<Todo>(todoBox);
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
@@ -41,12 +40,6 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (ctx) => AddTodo()));
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              //ref.read(todosProvider.notifier).clearTodos(box);
             },
           ),
         ],
