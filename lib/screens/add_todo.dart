@@ -64,6 +64,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
           isCompleted: false,
           frequency: _selectedFrequency,
         );
+        print(_selectedFrequency);
       }
 
       var box = Hive.box<Todo>(todoBox);

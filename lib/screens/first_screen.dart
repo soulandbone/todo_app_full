@@ -18,7 +18,7 @@ class FirstScreen extends ConsumerStatefulWidget {
 }
 
 class _FirstScreenState extends ConsumerState<FirstScreen> {
-  var _currentIndex = 0;
+  var _currentIndex = 1;
 
   List<Widget> activeScreen = [
     AllTodosScreen(),

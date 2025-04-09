@@ -59,20 +59,24 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     print('day of the week is $dayOfTheWeek');
     List<Todo> filteredList = [];
 
-    for (Todo todo in state) {
+    print('length of state is ${state.length}');
+
+    for (Todo todo in list) {
       if (todo.frequency == Frequency.daily) {
         filteredList.add(todo);
-      } else if (todo.frequency == Frequency.weekly &&
+      }
+      if (todo.frequency == Frequency.weekly &&
           todo.specificDays != null &&
           todo.specificDays![index]) {
         filteredList.add(todo);
-      } else if (todo.frequency == Frequency.specific &&
+      }
+      if (todo.frequency == Frequency.specific &&
           todo.specificDate != null &&
           formatter.format(todo.specificDate!) == formattedToday) {
         filteredList.add(todo);
       }
     }
-
+    print(filteredList);
     return filteredList;
   }
 }
