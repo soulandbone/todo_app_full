@@ -17,6 +17,9 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
   void addTodo(Todo todo, BuildContext context, Box<Todo> box) async {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('You added a new Todo')));
     var newState = [todo, ...state];
     state = newState;
     Navigator.of(context).pop();
