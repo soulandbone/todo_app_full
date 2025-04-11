@@ -11,12 +11,9 @@ class TodosList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var readingList = ref.read(todosProvider);
-
-    for (int i = 0; i < readingList.length; i++) {
-      print(readingList[i].frequency);
-    }
+    // for (int i = 0; i < readingList.length; i++) {}
     List<Todo> todosList = ref.watch(todosProvider);
+    print('todos list is $todosList');
     List<Todo> filteredList = ref
         .watch(todosProvider.notifier)
         .filterByDay(todosList);

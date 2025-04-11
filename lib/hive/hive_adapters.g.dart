@@ -17,6 +17,7 @@ class TodoAdapter extends TypeAdapter<Todo> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Todo(
+      creationDate: fields[6] as DateTime,
       title: fields[0] as String,
       isCompleted: fields[1] as bool,
       frequency: fields[2] as Frequency,
@@ -29,7 +30,7 @@ class TodoAdapter extends TypeAdapter<Todo> {
   @override
   void write(BinaryWriter writer, Todo obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class TodoAdapter extends TypeAdapter<Todo> {
       ..writeByte(4)
       ..write(obj.specificDate)
       ..writeByte(5)
-      ..write(obj.completedDate);
+      ..write(obj.completedDate)
+      ..writeByte(6)
+      ..write(obj.creationDate);
   }
 
   @override

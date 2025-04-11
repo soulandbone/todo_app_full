@@ -25,4 +25,9 @@ class Todo extends HiveObject {
   final List<bool>? specificDays;
   final DateTime? specificDate;
   DateTime? completedDate;
+
+  @override
+  String toString() {
+    return 'Todo{title: $title, isCompleted: $isCompleted, creationDate: $creationDate}';
+  }
 }

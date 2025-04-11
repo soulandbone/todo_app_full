@@ -13,7 +13,6 @@ Future<void> main() async {
 
   Hive.registerAdapters();
 
-  await Hive.openBox<Todo>(summaryBox);
   await Hive.openBox<Todo>(todoBox);
 
   runApp(ProviderScope(child: const MyApp()));

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +15,45 @@ final todosProvider = StateNotifierProvider((ref) {
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
+  Map<DateTime, int> summaryPerDay() {
+    // problem is that it considers creation Day, and not day when its due
+    Map<String, Map<String, int>> summaryData = {};
+    Map<DateTime, int> formattedSummary = {};
+
+    var todosList = state;
+
+    for (int i = 0; i < todosList.length; i++) {
+      // I loop through all the list
+      var keyDate = formatter.format(todosList[i].creationDate);
+
+      if (!summaryData.containsKey(keyDate)) {
+        summaryData[keyDate] = {
+          'total': 0,
+          'completed': 0,
+        }; // there is no key, so it adds it with value zero
+      }
+      // Now that it exists, it will add one
+      summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
+
+      if (todosList[i].isCompleted) {
+        summaryData[keyDate]!['completed'] =
+            summaryData[keyDate]!['completed']! + 1;
+      }
+    }
+
+    DateFormat format = DateFormat('M/d/yyyy');
+
+    summaryData.forEach((key, value) {
+      DateTime keyDT = format.parse(key); //
+      if (!formattedSummary.containsKey(keyDT) && value['total'] != null) {
+        formattedSummary[keyDT] =
+            ((value['completed']! / value['total']!) * 100).toInt();
+      }
+    });
+    print('formatted summary is $formattedSummary');
+    return formattedSummary;
+  }
+
   List<Todo> get completedTodos {
     final List<Todo> completedTodos = [];
     for (int i = 0; i < state.length; i++) {
@@ -27,49 +65,50 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   }
 
   //**********************************************************************
-  void addTodo(Todo todo, Box<Todo> box) async {
-    var newState = [todo, ...state];
+  void addTodo(Todo todo) async {
+    var newState = [...state, todo];
     state = newState;
 
-    await box.add(todo);
+    await Hive.box<Todo>(todoBox).add(todo);
   }
 
   //**************************************************************************/
-  void removeTodo(Todo todo, Box<Todo> box) async {
+  void removeTodo(Todo todo) async {
     var newState = state.where((element) => (element.id != todo.id)).toList();
 
     state = newState;
-    await box.delete(todo.key);
+
+    await Hive.box<Todo>(todoBox).delete(todo.key);
   }
 
   //*************************************************************************** */
 
-  void clearTodos(Box<Todo> box) async {
+  void clearTodos() async {
     state = [];
-    await box.clear();
+    await Hive.box<Todo>(todoBox).clear();
   }
 
   //***************************************************************************** */
-  void updateState(Todo todo, Box<Todo> box) async {
+  void updateState(Todo todo) async {
     List<Todo> newState = List.from(state);
 
     var index = state.indexWhere((element) => element.id == todo.id);
+    print('index is $index');
 
     Todo updatedTodo = Todo(
       title: todo.title,
       isCompleted: !todo.isCompleted,
       frequency: todo.frequency,
       creationDate: todo.creationDate,
+      completedDate: newState[index].isCompleted ? null : DateTime.now(),
     );
 
-    newState[index].isCompleted = !state[index].isCompleted;
-
-    if (newState[index].isCompleted) {
-      newState[index].completedDate = DateTime.now();
-    }
+    newState[index] = updatedTodo; // new line
 
     state = newState;
-    await box.putAt(index, updatedTodo);
+
+    await Hive.box<Todo>(todoBox).putAt(index, updatedTodo);
+    print('Hive values are ${Hive.box<Todo>(todoBox).values.toList()}');
   }
 
   //********************************************************************************************* */

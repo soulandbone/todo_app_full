@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
-import 'package:todos_app_full/hive_boxes.dart';
-import 'package:todos_app_full/models/todo.dart';
+import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/screens/add_todo.dart';
 import 'package:todos_app_full/screens/all_todos.dart';
 import 'package:todos_app_full/screens/completed_todos.dart';
@@ -42,6 +40,12 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
               ).push(MaterialPageRoute(builder: (ctx) => AddTodo()));
             },
           ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              ref.read(todosProvider.notifier).clearTodos();
+            },
+          ),
         ],
       ),
       body: activeScreen[_currentIndex],
@@ -54,8 +58,6 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
           setState(() {
             _currentIndex = value;
           });
-
-          print('Current index is $_currentIndex');
         },
 
         items: [

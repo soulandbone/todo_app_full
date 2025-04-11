@@ -20,7 +20,6 @@ class AddTodo extends ConsumerStatefulWidget {
 }
 
 class _AddTodoState extends ConsumerState<AddTodo> {
-  final today = DateTime.now();
   final oneYearFromNow = DateTime(DateTime.now().year + 1);
 
   String _savedName = '';
@@ -28,6 +27,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   bool dateHasBeenSelected = false;
   bool selectSpecificDateIsActive = false;
   late DateTime _selectedDate;
+  late DateTime _creationDate;
 
   String get selectedDateString => DateFormat.yMd().format(_selectedDate);
 
@@ -36,6 +36,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   final formKey = GlobalKey<FormState>();
 
   void onSubmit() {
+    _creationDate = DateTime.now();
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
@@ -43,16 +44,15 @@ class _AddTodoState extends ConsumerState<AddTodo> {
         title: _savedName,
         isCompleted: false,
         frequency: _selectedFrequency,
-        creationDate: DateTime.now(),
+        creationDate: _creationDate,
         specificDays:
             (_selectedFrequency == Frequency.weekly) ? _selectedDays : null,
         specificDate:
             (_selectedFrequency == Frequency.specific) ? _selectedDate : null,
+        completedDate: null,
       );
-
-      var box = Hive.box<Todo>(todoBox);
-
-      ref.read(todosProvider.notifier).addTodo(newTodo, box);
+      print('Creating Todo: ${newTodo.title} with ID: ${newTodo.id}');
+      ref.read(todosProvider.notifier).addTodo(newTodo);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('You added a new Todo')));
