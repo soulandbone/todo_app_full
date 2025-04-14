@@ -18,6 +18,7 @@ class HeatMapScreen extends ConsumerWidget {
           flexible: true,
           datasets: summary,
           colorsets: {
+            0: Colors.red,
             10: Colors.green,
             20: Colors.orange,
             30: Colors.yellow,

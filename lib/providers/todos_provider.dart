@@ -16,6 +16,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
   Map<DateTime, int> summaryPerDay() {
+    //  I need to tag all days, but only days from firstDate to present Date. No point in painting days in the future,
     // problem is that it considers creation Day, and not day when its due
     Map<String, Map<String, int>> summaryData = {};
     Map<DateTime, int> formattedSummary = {};
@@ -23,8 +24,11 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     var todosList = state;
 
     for (int i = 0; i < todosList.length; i++) {
+      var dueDate = FunctionHelpers.calculateFirstDueDate(todosList[i]);
       // I loop through all the list
-      var keyDate = formatter.format(todosList[i].creationDate);
+      var keyDate = formatter.format(
+        dueDate,
+      ); // for every index i, we get the key that we are using, which is the dueDate of a task
 
       if (!summaryData.containsKey(keyDate)) {
         summaryData[keyDate] = {
