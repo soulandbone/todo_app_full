@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Todo:
     typeId: 0
-    nextIndex: 7
+    nextIndex: 8
     fields:
       title:
         index: 0
@@ -21,6 +21,8 @@ types:
         index: 5
       creationDate:
         index: 6
+      firstDueDate:
+        index: 7
   Frequency:
     typeId: 1
     nextIndex: 3

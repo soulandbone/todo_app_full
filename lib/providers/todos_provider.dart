@@ -15,34 +15,45 @@ final todosProvider = StateNotifierProvider((ref) {
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
-  Map<DateTime, int> summaryPerDay() {
-    //  I need to tag all days, but only days from firstDate to present Date. No point in painting days in the future,
-    // problem is that it considers creation Day, and not day when its due
+  Map<DateTime, List<Todo>> completedTodosPerDay =
+      {}; // I map the completedTodos for each day, the date is the key, and the list is the list of Todos that were completed that day.
+
+  Map<DateTime, int>? summaryPerDay() {
     Map<String, Map<String, int>> summaryData = {};
     Map<DateTime, int> formattedSummary = {};
 
     var todosList = state;
 
-    for (int i = 0; i < todosList.length; i++) {
-      var dueDate = FunctionHelpers.calculateFirstDueDate(todosList[i]);
-      // I loop through all the list
-      var keyDate = formatter.format(
-        dueDate,
-      ); // for every index i, we get the key that we are using, which is the dueDate of a task
+    if (todosList.isEmpty) {
+      return null;
+    }
 
-      if (!summaryData.containsKey(keyDate)) {
-        summaryData[keyDate] = {
-          'total': 0,
-          'completed': 0,
-        }; // there is no key, so it adds it with value zero
-      }
-      // Now that it exists, it will add one
-      summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
+    var firstDate = FunctionHelpers.calculateMostAncientDate(todosList);
+    print('First date is $firstDate');
+    var normalizedFirstDate = DateTime(
+      firstDate.year,
+      firstDate.month,
+      firstDate.day,
+    );
+    print('Normalized First date is   $normalizedFirstDate');
+    var normalizedToday = DateTime(today.year, today.month, today.day);
+    var currentDay = normalizedFirstDate;
 
-      if (todosList[i].isCompleted) {
-        summaryData[keyDate]!['completed'] =
-            summaryData[keyDate]!['completed']! + 1;
+    while (currentDay.isBefore(normalizedToday) ||
+        currentDay == normalizedToday) {
+      print('while loop is executing');
+      var keyDate = formatter.format(currentDay);
+      // I start from the first day in the possible dates (until today)
+      for (int i = 0; i < todosList.length; i++) {
+        if (FunctionHelpers.isDueToday(todosList[i], currentDay)) {
+          // if is dueToday then add it to the summary of that particular day
+          if (!summaryData.containsKey(keyDate)) {
+            summaryData[keyDate] = {'total': 0};
+          }
+          summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
+        }
       }
+      currentDay = currentDay.add(Duration(days: 1));
     }
 
     DateFormat format = DateFormat('M/d/yyyy');
@@ -50,8 +61,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     summaryData.forEach((key, value) {
       DateTime keyDT = format.parse(key); //
       if (!formattedSummary.containsKey(keyDT) && value['total'] != null) {
-        formattedSummary[keyDT] =
-            ((value['completed']! / value['total']!) * 100).toInt();
+        formattedSummary[keyDT] = (value['total']!) * 10;
       }
     });
     print('formatted summary is $formattedSummary');
@@ -105,6 +115,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       frequency: todo.frequency,
       creationDate: todo.creationDate,
       completedDate: newState[index].isCompleted ? null : DateTime.now(),
+      firstDueDate: todo.firstDueDate,
     );
 
     newState[index] = updatedTodo; // new line

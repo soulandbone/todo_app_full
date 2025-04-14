@@ -91,21 +91,6 @@ class FunctionHelpers {
     }
   }
 
-  static DateTime calculateFirstDueDate(Todo todo) {
-    DateTime? firstDate;
-    if (todo.frequency == Frequency.daily) {
-      firstDate = todo.creationDate;
-    }
-    if (todo.frequency == Frequency.specific) {
-      firstDate = todo.specificDate!;
-    }
-    if (todo.frequency == Frequency.weekly) {
-      List<String> formattedList = FunctionHelpers.daysList(todo.specificDays!);
-      getNextDate(formattedList, todo.creationDate);
-    }
-    return firstDate!;
-  }
-
   static DateTime getNextDate(List<String> dates, DateTime creationDay) {
     DateTime resultingDate;
 
@@ -117,5 +102,68 @@ class FunctionHelpers {
       resultingDate = creationDay.add(Duration(days: 1));
     }
     return resultingDate;
+  }
+
+  static DateTime calculateFirstDueDate(
+    Frequency frequency,
+    DateTime creationDate,
+    DateTime? specificDate,
+    List<bool>? specificDays,
+  ) {
+    DateTime? firstDate;
+    if (frequency == Frequency.daily) {
+      firstDate = creationDate;
+    }
+    if (frequency == Frequency.specific && specificDate != null) {
+      firstDate = specificDate;
+    }
+    if (frequency == Frequency.weekly && specificDays != null) {
+      List<String> formattedList = FunctionHelpers.daysList(specificDays);
+      getNextDate(formattedList, creationDate);
+    }
+    return firstDate!;
+  }
+
+  static DateTime calculateMostAncientDate(List<Todo> listOfTodos) {
+    if (listOfTodos.isEmpty) {
+      return DateTime.now();
+    }
+    List<DateTime> listOfDueDates = [];
+    for (int i = 0; i < listOfTodos.length; i++) {
+      if (!listOfDueDates.contains(listOfTodos[i].firstDueDate)) {
+        listOfDueDates.add(listOfTodos[i].firstDueDate!);
+      }
+    }
+
+    var smallestDate = listOfDueDates.reduce(
+      (value, element) => element.isBefore(value) ? element : value,
+    );
+    return smallestDate;
+  }
+
+  static bool isDueToday(Todo todo, DateTime today) {
+    if (todo.frequency == Frequency.daily) {
+      return true;
+    }
+    if (todo.frequency == Frequency.specific) {
+      var formattedSpecificDate = DateTime(
+        todo.specificDate!.year,
+        todo.specificDate!.month,
+        todo.specificDate!.day,
+      );
+      var formattedToday = DateTime(today.year, today.month, today.day);
+
+      if (formattedSpecificDate.isAtSameMomentAs(formattedToday)) {
+        return true;
+      }
+    }
+    if (todo.frequency == Frequency.weekly &&
+        todo.firstDueDate!.isBefore(today) &&
+        daysList(
+          todo.specificDays!,
+        ).contains(DateFormat('EEEE').format(today).substring(0, 2))) {
+      return true;
+    }
+    return false;
   }
 }

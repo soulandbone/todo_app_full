@@ -15,6 +15,7 @@ class Todo extends HiveObject {
     this.specificDays,
     this.specificDate,
     this.completedDate,
+    required this.firstDueDate,
   }) : id = uuid.v4();
 
   final DateTime creationDate;
@@ -25,6 +26,7 @@ class Todo extends HiveObject {
   final List<bool>? specificDays;
   final DateTime? specificDate;
   DateTime? completedDate;
+  final DateTime? firstDueDate;
 
   @override
   String toString() {

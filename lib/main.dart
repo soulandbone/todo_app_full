@@ -14,6 +14,7 @@ Future<void> main() async {
   Hive.registerAdapters();
 
   await Hive.openBox<Todo>(todoBox);
+  await Hive.openBox<Todo>(completedTodoBox);
 
   runApp(ProviderScope(child: const MyApp()));
 }

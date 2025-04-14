@@ -40,6 +40,30 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
+      var firstDueDate = FunctionHelpers.calculateFirstDueDate(
+        _selectedFrequency,
+        _creationDate,
+        null,
+        null,
+      );
+
+      if (_selectedFrequency == Frequency.specific) {
+        firstDueDate = FunctionHelpers.calculateFirstDueDate(
+          _selectedFrequency,
+          _creationDate,
+          _selectedDate,
+          null,
+        );
+      }
+      if (_selectedFrequency == Frequency.weekly) {
+        firstDueDate = FunctionHelpers.calculateFirstDueDate(
+          _selectedFrequency,
+          _creationDate,
+          null,
+          _selectedDays,
+        );
+      }
+
       var newTodo = Todo(
         title: _savedName,
         isCompleted: false,
@@ -50,6 +74,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
         specificDate:
             (_selectedFrequency == Frequency.specific) ? _selectedDate : null,
         completedDate: null,
+        firstDueDate: firstDueDate,
       );
       print('Creating Todo: ${newTodo.title} with ID: ${newTodo.id}');
       ref.read(todosProvider.notifier).addTodo(newTodo);
