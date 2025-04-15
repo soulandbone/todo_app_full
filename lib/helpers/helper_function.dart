@@ -91,25 +91,22 @@ class FunctionHelpers {
     }
   }
 
-  static DateTime getNextDate(List<String> dates, DateTime creationDay) {
-    DateTime resultingDate;
+  static int getDaysDistance(List<String> dates, DateTime creationDay) {
+    var daysDifference = 0;
+    var solved = false;
+    var day = creationDay;
 
-    var dayString = DateFormat('EEEE').format(creationDay).substring(0, 2);
-
-    if (dates.contains(dayString)) {
-      resultingDate = DateTime(
-        creationDay.year,
-        creationDay.month,
-        creationDay.day,
-      );
-    } else {
-      resultingDate = DateTime(
-        creationDay.year,
-        creationDay.month,
-        creationDay.day,
-      ).add(Duration(days: 1));
+    while (!solved) {
+      var dayString = DateFormat('EEEE').format(day).substring(0, 2);
+      if (dates.contains(dayString)) {
+        solved = true;
+      } else {
+        day = day.add(Duration(days: 1));
+        daysDifference += 1;
+      }
     }
-    return resultingDate;
+    print('days difference is $daysDifference');
+    return daysDifference;
   }
 
   static DateTime? calculateFirstDueDate(
@@ -133,7 +130,14 @@ class FunctionHelpers {
     if (frequency == Frequency.weekly && specificDays != null) {
       List<String> formattedList = FunctionHelpers.daysList(specificDays);
 
-      firstDate = getNextDate(formattedList, creationDate);
+      var daysDifference = getDaysDistance(formattedList, creationDate);
+      var formattedCreationDate = DateTime(
+        creationDate.year,
+        creationDate.month,
+        creationDate.day,
+      );
+
+      firstDate = formattedCreationDate.add(Duration(days: daysDifference));
     }
     return firstDate;
   }
@@ -172,7 +176,6 @@ class FunctionHelpers {
       }
     }
     if (todo.frequency == Frequency.weekly &&
-        todo.firstDueDate!.isBefore(today) &&
         daysList(
           todo.specificDays!,
         ).contains(DateFormat('EEEE').format(today).substring(0, 2))) {

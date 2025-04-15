@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:todos_app_full/helpers/helper_function.dart';
-import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/widgets/conditional_container.dart';

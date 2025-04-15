@@ -28,6 +28,6 @@ class Todo extends HiveObject {
 
   @override
   String toString() {
-    return 'Todo{title: $title, isCompleted: $isCompleted, creationDate: $creationDate, firstdueDate: $firstDueDate}';
+    return 'Todo{title: $title, isCompleted: $isCompleted, creationDate: $creationDate, firstdueDate: $firstDueDate, frequency: $frequency}';
   }
 }

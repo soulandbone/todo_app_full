@@ -26,22 +26,22 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     }
 
     var firstDate = FunctionHelpers.calculateMostAncientDate(todosList);
-    print('First date is $firstDate');
+    //print('First date is $firstDate');
     var normalizedFirstDate = DateTime(
       firstDate.year,
       firstDate.month,
       firstDate.day,
     );
-    print('Normalized First date is   $normalizedFirstDate');
+    // print('Normalized First date is   $normalizedFirstDate');
     var normalizedToday = DateTime(today.year, today.month, today.day);
     var currentDay = normalizedFirstDate;
 
     while (currentDay.isBefore(normalizedToday) ||
         currentDay == normalizedToday) {
-      print('while loop is executing');
       var keyDate = formatter.format(currentDay);
       // I start from the first day in the possible dates (until today)
       for (int i = 0; i < todosList.length; i++) {
+        print(FunctionHelpers.isDueToday(todosList[i], currentDay));
         if (FunctionHelpers.isDueToday(todosList[i], currentDay)) {
           // if is dueToday then add it to the summary of that particular day
           if (!summaryData.containsKey(keyDate)) {
@@ -117,6 +117,8 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       frequency: todo.frequency,
       creationDate: todo.creationDate,
       firstDueDate: todo.firstDueDate,
+      specificDate: todo.specificDate,
+      specificDays: todo.specificDays,
     );
 
     newState[index] = updatedTodo; // new line
