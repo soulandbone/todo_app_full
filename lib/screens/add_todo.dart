@@ -73,7 +73,6 @@ class _AddTodoState extends ConsumerState<AddTodo> {
             (_selectedFrequency == Frequency.weekly) ? _selectedDays : null,
         specificDate:
             (_selectedFrequency == Frequency.specific) ? _selectedDate : null,
-        completedDate: null,
         firstDueDate: firstDueDate,
       );
       print('Creating Todo: ${newTodo.title} with ID: ${newTodo.id}');

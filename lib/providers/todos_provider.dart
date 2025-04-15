@@ -15,9 +15,6 @@ final todosProvider = StateNotifierProvider((ref) {
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
-  Map<DateTime, List<Todo>> completedTodosPerDay =
-      {}; // I map the completedTodos for each day, the date is the key, and the list is the list of Todos that were completed that day.
-
   Map<DateTime, int>? summaryPerDay() {
     Map<String, Map<String, int>> summaryData = {};
     Map<DateTime, int> formattedSummary = {};
@@ -48,9 +45,13 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
         if (FunctionHelpers.isDueToday(todosList[i], currentDay)) {
           // if is dueToday then add it to the summary of that particular day
           if (!summaryData.containsKey(keyDate)) {
-            summaryData[keyDate] = {'total': 0};
+            summaryData[keyDate] = {'total': 0, 'completed': 0};
           }
           summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
+          if (todosList[i].isCompleted) {
+            summaryData[keyDate]!['completed'] =
+                summaryData[keyDate]!['completed']! + 1;
+          }
         }
       }
       currentDay = currentDay.add(Duration(days: 1));
@@ -61,7 +62,8 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     summaryData.forEach((key, value) {
       DateTime keyDT = format.parse(key); //
       if (!formattedSummary.containsKey(keyDT) && value['total'] != null) {
-        formattedSummary[keyDT] = (value['total']!) * 10;
+        formattedSummary[keyDT] =
+            ((value['completed'])! / (value['total']!) * 100).toInt();
       }
     });
     print('formatted summary is $formattedSummary');
@@ -114,7 +116,6 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       isCompleted: !todo.isCompleted,
       frequency: todo.frequency,
       creationDate: todo.creationDate,
-      completedDate: newState[index].isCompleted ? null : DateTime.now(),
       firstDueDate: todo.firstDueDate,
     );
 

@@ -17,8 +17,6 @@ types:
         index: 3
       specificDate:
         index: 4
-      completedDate:
-        index: 5
       creationDate:
         index: 6
       firstDueDate:

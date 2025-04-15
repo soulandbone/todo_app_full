@@ -97,14 +97,23 @@ class FunctionHelpers {
     var dayString = DateFormat('EEEE').format(creationDay).substring(0, 2);
 
     if (dates.contains(dayString)) {
-      resultingDate = creationDay;
+      resultingDate = DateTime(
+        creationDay.year,
+        creationDay.month,
+        creationDay.day,
+      );
     } else {
-      resultingDate = creationDay.add(Duration(days: 1));
+      resultingDate = DateTime(
+        creationDay.year,
+        creationDay.month,
+        creationDay.day,
+      ).add(Duration(days: 1));
     }
     return resultingDate;
   }
 
-  static DateTime calculateFirstDueDate(
+  static DateTime? calculateFirstDueDate(
+    // need to format the date
     Frequency frequency,
     DateTime creationDate,
     DateTime? specificDate,
@@ -112,16 +121,21 @@ class FunctionHelpers {
   ) {
     DateTime? firstDate;
     if (frequency == Frequency.daily) {
-      firstDate = creationDate;
+      firstDate = DateTime(
+        creationDate.year,
+        creationDate.month,
+        creationDate.day,
+      );
     }
     if (frequency == Frequency.specific && specificDate != null) {
       firstDate = specificDate;
     }
     if (frequency == Frequency.weekly && specificDays != null) {
       List<String> formattedList = FunctionHelpers.daysList(specificDays);
-      getNextDate(formattedList, creationDate);
+
+      firstDate = getNextDate(formattedList, creationDate);
     }
-    return firstDate!;
+    return firstDate;
   }
 
   static DateTime calculateMostAncientDate(List<Todo> listOfTodos) {
