@@ -22,8 +22,8 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
   String _savedName = '';
   Frequency _selectedFrequency = Frequency.daily;
-  bool dateHasBeenSelected = false;
-  bool selectSpecificDateIsActive = false;
+  var dateHasBeenSelected = false;
+  var selectSpecificDateIsActive = false;
   late DateTime _selectedDate;
   late DateTime _creationDate;
 
@@ -34,6 +34,19 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   final formKey = GlobalKey<FormState>();
 
   void onSubmit() {
+    if (!_selectedDays.contains(true) &&
+        _selectedFrequency == Frequency.weekly) {
+      showDialog(
+        context: context,
+        builder:
+            (ctx) => AlertDialog(
+              content: Center(
+                child: Text('You need to select some days first'),
+              ),
+            ),
+      );
+      return;
+    }
     _creationDate = DateTime.now();
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -85,11 +98,17 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   void onFrequencyChange(Frequency value) {
     setState(() {
       _selectedFrequency = value;
+
       if (_selectedFrequency == Frequency.specific) {
+        _selectedDays = [false, false, false, false, false, false, false];
         selectSpecificDateIsActive = true;
         openDatePicker(context);
-      } else if (_selectedFrequency == Frequency.daily ||
-          _selectedFrequency == Frequency.weekly) {
+      }
+      if (_selectedFrequency == Frequency.daily) {
+        _selectedDays = [false, false, false, false, false, false, false];
+        selectSpecificDateIsActive = false;
+      }
+      if (_selectedFrequency == Frequency.weekly) {
         selectSpecificDateIsActive = false;
       }
     });

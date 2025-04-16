@@ -60,8 +60,14 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     DateFormat format = DateFormat('M/d/yyyy');
 
     summaryData.forEach((key, value) {
-      DateTime keyDT = format.parse(key); //
+      DateTime keyDT = format.parse(
+        key,
+      ); // transform a String into a DateTime object
       if (!formattedSummary.containsKey(keyDT) && value['total'] != null) {
+        // so it doesnt repeat the calculation, because it looks for each of the Dates
+        if (value['total'] == 0) {
+          formattedSummary[keyDT] = 0;
+        }
         formattedSummary[keyDT] =
             ((value['completed'])! / (value['total']!) * 100).toInt();
       }
