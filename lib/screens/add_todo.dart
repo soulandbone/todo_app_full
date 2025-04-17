@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,8 @@ import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/widgets/conditional_container.dart';
 
 import 'package:todos_app_full/widgets/days_wrap.dart';
+
+FunctionHelpers helpers = FunctionHelpers();
 
 class AddTodo extends ConsumerStatefulWidget {
   const AddTodo({super.key});
@@ -29,7 +32,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
   String get selectedDateString => DateFormat.yMd().format(_selectedDate);
 
-  List<bool> _selectedDays = [false, false, false, false, false, false, false];
+  List<bool> _selectedDays = List.generate(7, (int i) => false);
 
   final formKey = GlobalKey<FormState>();
 
@@ -40,7 +43,12 @@ class _AddTodoState extends ConsumerState<AddTodo> {
         context: context,
         builder:
             (ctx) => AlertDialog(
-              content: Center(
+              title: Text('Attention!'),
+              iconColor: Colors.amber,
+              shadowColor: Colors.purpleAccent,
+              icon: Icon(Icons.warning),
+              content: SizedBox(
+                height: 50,
                 child: Text('You need to select some days first'),
               ),
             ),
@@ -51,7 +59,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
-      var firstDueDate = FunctionHelpers.calculateFirstDueDate(
+      var firstDueDate = helpers.calculateFirstDueDate(
         _selectedFrequency,
         _creationDate,
         null,
@@ -59,7 +67,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
       );
 
       if (_selectedFrequency == Frequency.specific) {
-        firstDueDate = FunctionHelpers.calculateFirstDueDate(
+        firstDueDate = helpers.calculateFirstDueDate(
           _selectedFrequency,
           _creationDate,
           _selectedDate,
@@ -67,7 +75,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
         );
       }
       if (_selectedFrequency == Frequency.weekly) {
-        firstDueDate = FunctionHelpers.calculateFirstDueDate(
+        firstDueDate = helpers.calculateFirstDueDate(
           _selectedFrequency,
           _creationDate,
           null,
@@ -86,7 +94,6 @@ class _AddTodoState extends ConsumerState<AddTodo> {
             (_selectedFrequency == Frequency.specific) ? _selectedDate : null,
         firstDueDate: firstDueDate,
       );
-      print('Creating Todo: ${newTodo.title} with ID: ${newTodo.id}');
       ref.read(todosProvider.notifier).addTodo(newTodo);
       ScaffoldMessenger.of(
         context,
@@ -100,12 +107,12 @@ class _AddTodoState extends ConsumerState<AddTodo> {
       _selectedFrequency = value;
 
       if (_selectedFrequency == Frequency.specific) {
-        _selectedDays = [false, false, false, false, false, false, false];
+        _selectedDays = List.generate(7, (int i) => false);
         selectSpecificDateIsActive = true;
         openDatePicker(context);
       }
       if (_selectedFrequency == Frequency.daily) {
-        _selectedDays = [false, false, false, false, false, false, false];
+        _selectedDays = List.generate(7, (int i) => false);
         selectSpecificDateIsActive = false;
       }
       if (_selectedFrequency == Frequency.weekly) {
@@ -117,7 +124,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   void onChooseDates(String label) {
     List<bool> newList = List.from(_selectedDays);
 
-    int index = FunctionHelpers.checkIndexByLabel(label);
+    int index = helpers.checkIndexByLabel(label);
 
     if (index != -1) {
       newList[index] = !_selectedDays[index];
@@ -173,7 +180,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
     return Scaffold(
       appBar: AppBar(title: Text('Add new Todo item')),
       body: Container(
-        // decoration: BoxDecoration(color: Colors.amber),
+        //decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
         child: Form(
           key: formKey,
 
@@ -208,9 +215,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                             Frequency.values.map((frequency) {
                               return DropdownMenuItem(
                                 value: frequency,
-                                child: Text(
-                                  FunctionHelpers.enumToString(frequency),
-                                ),
+                                child: Text(helpers.enumToString(frequency)),
                               );
                             }).toList(),
                         onChanged: (value) {
@@ -221,8 +226,8 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                     content,
                   ],
                 ),
-                Gap(10),
-                TextButton(
+                Gap(15),
+                ElevatedButton(
                   onPressed: () {
                     onSubmit();
                   },

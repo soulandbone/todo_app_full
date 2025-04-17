@@ -13,7 +13,7 @@ class TodosList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // for (int i = 0; i < readingList.length; i++) {}
     List<Todo> todosList = ref.watch(todosProvider);
-    print('todos list is $todosList');
+
     List<Todo> filteredList = ref
         .watch(todosProvider.notifier)
         .filterByDay(todosList);
@@ -32,7 +32,10 @@ class TodosList extends ConsumerWidget {
             : ListView.builder(
               itemCount: activeList.length,
               itemBuilder:
-                  (context, index) => TodoItem(todo: activeList[index]),
+                  (context, index) => TodoItem(
+                    todo: activeList[index],
+                    showCheckBox: all ? false : true,
+                  ),
             );
 
     return content;

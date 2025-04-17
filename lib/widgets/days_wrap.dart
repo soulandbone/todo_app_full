@@ -21,6 +21,7 @@ class _DaysWrapState extends State<DaysWrap> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      alignment: WrapAlignment.center,
       direction: Axis.horizontal,
       children: [
         for (int index = 0; index < days.length; index++)

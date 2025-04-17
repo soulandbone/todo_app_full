@@ -14,7 +14,9 @@ class CompletedTodosScreen extends ConsumerWidget {
     if (completedTodos.isNotEmpty) {
       content = ListView.builder(
         itemCount: completedTodos.length,
-        itemBuilder: (context, index) => TodoItem(todo: completedTodos[index]),
+        itemBuilder:
+            (context, index) =>
+                TodoItem(todo: completedTodos[index], showCheckBox: false),
       );
     }
 

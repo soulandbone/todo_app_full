@@ -1,4 +1,3 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -7,6 +6,7 @@ import 'package:todos_app_full/hive/hive_registrar.g.dart';
 import 'package:todos_app_full/hive_boxes.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/screens/first_screen.dart';
+import 'package:todos_app_full/theming/app_theme.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -26,9 +26,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
       title: 'Flutter Demo',
-      theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
-      darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+
       home: FirstScreen(),
     );
   }

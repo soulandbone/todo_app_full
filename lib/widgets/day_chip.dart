@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todos_app_full/helpers/helper_function.dart';
 
+FunctionHelpers helpers = FunctionHelpers();
+
 class DayChip extends StatelessWidget {
   const DayChip({
     required this.onChooseDate,
@@ -14,7 +16,7 @@ class DayChip extends StatelessWidget {
   final List<bool> listOfDays;
   final Function(String label) onChooseDate;
 
-  bool get isActive => listOfDays[FunctionHelpers.checkIndexByLabel(label)];
+  bool get isActive => listOfDays[helpers.checkIndexByLabel(label)];
 
   @override
   Widget build(BuildContext context) {

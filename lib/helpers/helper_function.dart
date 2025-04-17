@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:todos_app_full/models/todo.dart';
 
 class FunctionHelpers {
-  static int checkIndexByLabel(String label) {
+  int checkIndexByLabel(String label) {
     // based on a label,it returns which index the label comes from considering a boolean list of 7 elements.
 
     int index = 0;
@@ -32,7 +32,7 @@ class FunctionHelpers {
     return index;
   }
 
-  static String returnDay(int index) {
+  String returnDay(int index) {
     // based on the index, returns which day it belongs to, considering a list of booleans in which every true element denotes a particular day
     switch (index) {
       case 0:
@@ -54,7 +54,7 @@ class FunctionHelpers {
     }
   }
 
-  static String checkDaysSelected(List<bool> list) {
+  String checkDaysSelected(List<bool> list) {
     //  returns a formatted String to show the days that it has been selected
     var readableDays = daysList(list);
 
@@ -62,7 +62,7 @@ class FunctionHelpers {
     return formattedSelection;
   }
 
-  static List<String> daysList(List<bool> list) {
+  List<String> daysList(List<bool> list) {
     List<String> readableDays = [];
     for (int index = 0; index < list.length; index++) {
       if (list[index]) {
@@ -72,7 +72,7 @@ class FunctionHelpers {
     return readableDays;
   }
 
-  static String listToString(List<String> list) {
+  String listToString(List<String> list) {
     String variable = ' ';
     for (int i = 0; i < list.length; i++) {
       variable = variable + list[i] + (' ');
@@ -80,7 +80,7 @@ class FunctionHelpers {
     return variable;
   }
 
-  static String enumToString(Frequency frequency) {
+  String enumToString(Frequency frequency) {
     switch (frequency) {
       case Frequency.daily:
         return 'Daily';
@@ -91,7 +91,7 @@ class FunctionHelpers {
     }
   }
 
-  static int getDaysDistance(List<String> dates, DateTime creationDay) {
+  int getDaysDistance(List<String> dates, DateTime creationDay) {
     var daysDifference = 0;
     var solved = false;
     var day = creationDay;
@@ -105,11 +105,11 @@ class FunctionHelpers {
         daysDifference += 1;
       }
     }
-    print('days difference is $daysDifference');
+
     return daysDifference;
   }
 
-  static DateTime? calculateFirstDueDate(
+  DateTime? calculateFirstDueDate(
     // need to format the date
     Frequency frequency,
     DateTime creationDate,
@@ -128,7 +128,7 @@ class FunctionHelpers {
       firstDate = specificDate;
     }
     if (frequency == Frequency.weekly && specificDays != null) {
-      List<String> formattedList = FunctionHelpers.daysList(specificDays);
+      List<String> formattedList = daysList(specificDays);
 
       var daysDifference = getDaysDistance(formattedList, creationDate);
       var formattedCreationDate = DateTime(
@@ -142,7 +142,7 @@ class FunctionHelpers {
     return firstDate;
   }
 
-  static DateTime calculateMostAncientDate(List<Todo> listOfTodos) {
+  DateTime calculateMostAncientDate(List<Todo> listOfTodos) {
     if (listOfTodos.isEmpty) {
       return DateTime.now();
     }
@@ -159,7 +159,7 @@ class FunctionHelpers {
     return smallestDate;
   }
 
-  static bool isDueToday(Todo todo, DateTime today) {
+  bool isDueToday(Todo todo, DateTime today) {
     if (todo.frequency == Frequency.daily) {
       return true;
     }

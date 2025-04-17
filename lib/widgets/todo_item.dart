@@ -7,19 +7,23 @@ import 'package:todos_app_full/helpers/helper_function.dart';
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
 
+FunctionHelpers helpers = FunctionHelpers();
+
 class TodoItem extends ConsumerWidget {
-  const TodoItem({required this.todo, super.key});
+  const TodoItem({required this.todo, required this.showCheckBox, super.key});
 
   final Todo todo;
+  final bool showCheckBox;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var formatter = DateFormat.MMMd();
 
     return Card(
+      // color: ThemeData.dark().colorScheme.primaryContainer,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      color: Colors.amber,
+
       child: Dismissible(
         key: ValueKey(todo.id),
         onDismissed: (direction) {
@@ -28,24 +32,26 @@ class TodoItem extends ConsumerWidget {
         child: ListTile(
           title: Text(
             todo.title,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
             todo.specificDate != null
                 ? formatter.format(todo.specificDate!)
                 : todo.specificDays == null
                 ? ' Daily'
-                : FunctionHelpers.checkDaysSelected(todo.specificDays!),
-            style: TextStyle(color: Colors.black),
+                : helpers.checkDaysSelected(todo.specificDays!),
           ),
-          trailing: Checkbox(
-            side: BorderSide(color: Colors.green),
-            activeColor: Colors.red,
-            value: todo.isCompleted,
-            onChanged: (value) {
-              ref.read(todosProvider.notifier).updateState(todo);
-            },
-          ),
+          trailing:
+              showCheckBox
+                  ? Checkbox(
+                    // side: BorderSide(color: Colors.green),
+                    // activeColor: Colors.red,
+                    value: todo.isCompleted,
+                    onChanged: (value) {
+                      ref.read(todosProvider.notifier).updateState(todo);
+                    },
+                  )
+                  : null,
         ),
       ),
     );

@@ -12,6 +12,8 @@ final todosProvider = StateNotifierProvider((ref) {
   return TodosNotifier();
 });
 
+FunctionHelpers helpers = FunctionHelpers();
+
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
@@ -25,7 +27,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       return null;
     }
 
-    var firstDate = FunctionHelpers.calculateMostAncientDate(todosList);
+    var firstDate = helpers.calculateMostAncientDate(todosList);
     //print('First date is $firstDate');
     var normalizedFirstDate = DateTime(
       firstDate.year,
@@ -41,8 +43,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       var keyDate = formatter.format(currentDay);
       // I start from the first day in the possible dates (until today)
       for (int i = 0; i < todosList.length; i++) {
-        print(FunctionHelpers.isDueToday(todosList[i], currentDay));
-        if (FunctionHelpers.isDueToday(todosList[i], currentDay)) {
+        if (helpers.isDueToday(todosList[i], currentDay)) {
           // if is dueToday then add it to the summary of that particular day
           if (!summaryData.containsKey(keyDate)) {
             summaryData[keyDate] = {'total': 0, 'completed': 0};
@@ -72,7 +73,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
             ((value['completed'])! / (value['total']!) * 100).toInt();
       }
     });
-    print('formatted summary is $formattedSummary');
+
     return formattedSummary;
   }
 
@@ -115,7 +116,6 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     List<Todo> newState = List.from(state);
 
     var index = state.indexWhere((element) => element.id == todo.id);
-    print('index is $index');
 
     Todo updatedTodo = Todo(
       title: todo.title,
@@ -132,7 +132,6 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     state = newState;
 
     await Hive.box<Todo>(todoBox).putAt(index, updatedTodo);
-    print('Hive values are ${Hive.box<Todo>(todoBox).values.toList()}');
   }
 
   //********************************************************************************************* */
@@ -140,11 +139,9 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   List<Todo> filterByDay(List<Todo> list) {
     var formattedToday = formatter.format(today);
     var dayOfTheWeek = DateFormat.EEEE().format(today).substring(0, 2);
-    var index = FunctionHelpers.checkIndexByLabel(dayOfTheWeek);
+    var index = helpers.checkIndexByLabel(dayOfTheWeek);
 
     List<Todo> filteredList = [];
-
-    print('formatted day today is ${formatter.format(today)}');
 
     for (Todo todo in list) {
       if (todo.frequency == Frequency.daily) {

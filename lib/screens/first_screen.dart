@@ -50,9 +50,9 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
       ),
       body: activeScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.white,
-        unselectedLabelStyle: TextStyle(color: Colors.white),
+        // selectedItemColor: Colors.red,
+        // unselectedItemColor: Colors.white,
+        // unselectedLabelStyle: TextStyle(color: Colors.white),
         currentIndex: _currentIndex,
         onTap: (value) {
           setState(() {
