@@ -1,32 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todos_app_full/providers/theme_provider.dart';
 
-import 'package:todos_app_full/main.dart';
-
-class MyDrawer extends ConsumerStatefulWidget {
+class MyDrawer extends ConsumerWidget {
   const MyDrawer({super.key});
 
   @override
-  ConsumerState<MyDrawer> createState() => _MyDrawerState();
-}
-
-class _MyDrawerState extends ConsumerState<MyDrawer> {
-  void onUpdateSwitch() {}
-
-  @override
-  Widget build(BuildContext context) {
-    var isDarkMode = ref.watch(themeProvider);
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    var isDarkMode = ref.watch(themeProvider); //watches the state
     return Drawer(
       child: ListView(
         children: [
           DrawerHeader(child: Text('MY Todos')),
           SwitchListTile(
             title: Text('Dark Mode'),
-            value: isDarkMode,
+            value: isDarkMode!,
             onChanged: (value) {
-              isDarkMode = value;
-              ref.read(themeProvider.notifier).state = isDarkMode;
+              ref.read(themeProvider.notifier).updateTheme(value);
             },
           ),
         ],
