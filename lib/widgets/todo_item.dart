@@ -6,6 +6,7 @@ import 'package:todos_app_full/helpers/helper_function.dart';
 
 import 'package:todos_app_full/models/todo.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
+import 'package:todos_app_full/theming/color_palette.dart';
 
 FunctionHelpers helpers = FunctionHelpers();
 
@@ -19,8 +20,10 @@ class TodoItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var formatter = DateFormat.MMMd();
 
+    ColorPalette colorPalette = ColorPalette();
+
     return Card(
-      // color: ThemeData.dark().colorScheme.primaryContainer,
+      color: colorPalette.darkColorScheme.secondaryContainer,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
 

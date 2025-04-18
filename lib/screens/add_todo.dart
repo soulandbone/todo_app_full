@@ -1,4 +1,3 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,16 +208,16 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: DropdownButton(
-                        value: _selectedFrequency,
-                        items:
+                      child: DropdownMenu(
+                        initialSelection: _selectedFrequency,
+                        dropdownMenuEntries:
                             Frequency.values.map((frequency) {
-                              return DropdownMenuItem(
+                              return DropdownMenuEntry(
                                 value: frequency,
-                                child: Text(helpers.enumToString(frequency)),
+                                label: helpers.enumToString(frequency),
                               );
                             }).toList(),
-                        onChanged: (value) {
+                        onSelected: (value) {
                           onFrequencyChange(value!);
                         },
                       ),

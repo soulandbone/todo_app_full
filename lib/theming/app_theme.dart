@@ -1,12 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
+/// The [AppTheme] defines light and dark themes for the app.
+///
+/// Theme setup for FlexColorScheme package v8.
+/// Use same major flex_color_scheme package version. If you use a
+/// lower minor version, some properties may not be supported.
+/// In that case, remove them after copying this theme to your
+/// app or upgrade the package to version 8.2.0.
+///
+/// Use it in a [MaterialApp] like this:
+///
+/// MaterialApp(
+///   theme: AppTheme.light,
+///   darkTheme: AppTheme.dark,
+/// );
 abstract final class AppTheme {
   // The FlexColorScheme defined light mode ThemeData.
   static ThemeData light = FlexThemeData.light(
     // Using FlexColorScheme built-in FlexScheme enum based colors
-    scheme: FlexScheme.amber,
+    scheme: FlexScheme.mallardGreen,
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
     blendLevel: 1,
@@ -23,8 +37,8 @@ abstract final class AppTheme {
       adaptiveAppBarScrollUnderOff: FlexAdaptive.excludeWebAndroidFuchsia(),
       adaptiveRadius: FlexAdaptive.excludeWebAndroidFuchsia(),
       defaultRadiusAdaptive: 10.0,
-      elevatedButtonSchemeColor: SchemeColor.onPrimaryContainer,
-      elevatedButtonSecondarySchemeColor: SchemeColor.primaryContainer,
+      elevatedButtonSchemeColor: SchemeColor.primaryContainer,
+      elevatedButtonSecondarySchemeColor: SchemeColor.primary,
       outlinedButtonOutlineSchemeColor: SchemeColor.primary,
       toggleButtonsBorderSchemeColor: SchemeColor.primary,
       segmentedButtonSchemeColor: SchemeColor.primary,
@@ -38,16 +52,17 @@ abstract final class AppTheme {
       inputDecoratorUnfocusedHasBorder: false,
       inputDecoratorFocusedBorderWidth: 1.0,
       inputDecoratorPrefixIconSchemeColor: SchemeColor.primary,
+      listTileSelectedSchemeColor: SchemeColor.primary,
       fabUseShape: true,
       fabAlwaysCircular: true,
       fabSchemeColor: SchemeColor.tertiary,
-      chipSchemeColor: SchemeColor.primary,
-      chipSelectedSchemeColor: SchemeColor.secondaryContainer,
+      chipSchemeColor: SchemeColor.shadow,
+      chipSelectedSchemeColor: SchemeColor.primaryFixed,
       chipSecondarySelectedSchemeColor: SchemeColor.tertiary,
-      cardRadius: 14.0,
+      cardRadius: 13.0,
       popupMenuRadius: 6.0,
       popupMenuElevation: 3.0,
-      alignedDropdown: true,
+      popupMenuOpacity: 0.91,
       dialogRadius: 18.0,
       appBarScrolledUnderElevation: 1.0,
       drawerElevation: 1.0,
@@ -77,7 +92,7 @@ abstract final class AppTheme {
       navigationRailBackgroundSchemeColor: SchemeColor.surface,
     ),
     // ColorScheme seed generation configuration for light mode.
-    keyColors: const FlexKeyColors(),
+    keyColors: const FlexKeyColors(useSecondary: true, useTertiary: true),
     tones: FlexSchemeVariant.candyPop.tones(Brightness.light),
     // Direct ThemeData properties.
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
@@ -87,7 +102,7 @@ abstract final class AppTheme {
   // The FlexColorScheme defined dark mode ThemeData.
   static ThemeData dark = FlexThemeData.dark(
     // Using FlexColorScheme built-in FlexScheme enum based colors.
-    scheme: FlexScheme.amber,
+    scheme: FlexScheme.mallardGreen,
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
     blendLevel: 2,
@@ -105,8 +120,8 @@ abstract final class AppTheme {
       adaptiveAppBarScrollUnderOff: FlexAdaptive.excludeWebAndroidFuchsia(),
       adaptiveRadius: FlexAdaptive.excludeWebAndroidFuchsia(),
       defaultRadiusAdaptive: 10.0,
-      elevatedButtonSchemeColor: SchemeColor.onPrimaryContainer,
-      elevatedButtonSecondarySchemeColor: SchemeColor.primaryContainer,
+      elevatedButtonSchemeColor: SchemeColor.primaryContainer,
+      elevatedButtonSecondarySchemeColor: SchemeColor.primary,
       outlinedButtonOutlineSchemeColor: SchemeColor.primary,
       toggleButtonsBorderSchemeColor: SchemeColor.primary,
       segmentedButtonSchemeColor: SchemeColor.primary,
@@ -120,16 +135,17 @@ abstract final class AppTheme {
       inputDecoratorUnfocusedHasBorder: false,
       inputDecoratorFocusedBorderWidth: 1.0,
       inputDecoratorPrefixIconSchemeColor: SchemeColor.primary,
+      listTileSelectedSchemeColor: SchemeColor.primary,
       fabUseShape: true,
       fabAlwaysCircular: true,
       fabSchemeColor: SchemeColor.tertiary,
-      chipSchemeColor: SchemeColor.primary,
-      chipSelectedSchemeColor: SchemeColor.secondaryContainer,
+      chipSchemeColor: SchemeColor.shadow,
+      chipSelectedSchemeColor: SchemeColor.primaryFixed,
       chipSecondarySelectedSchemeColor: SchemeColor.tertiary,
-      cardRadius: 14.0,
+      cardRadius: 13.0,
       popupMenuRadius: 6.0,
       popupMenuElevation: 3.0,
-      alignedDropdown: true,
+      popupMenuOpacity: 0.91,
       dialogRadius: 18.0,
       appBarScrolledUnderElevation: 3.0,
       drawerElevation: 1.0,
@@ -159,7 +175,7 @@ abstract final class AppTheme {
       navigationRailBackgroundSchemeColor: SchemeColor.surface,
     ),
     // ColorScheme seed configuration setup for dark mode.
-    keyColors: const FlexKeyColors(),
+    keyColors: const FlexKeyColors(useSecondary: true, useTertiary: true),
     tones: FlexSchemeVariant.candyPop.tones(Brightness.dark),
     // Direct ThemeData properties.
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
