@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todos_app_full/theming/color_palette.dart';
 
 /// The [AppTheme] defines light and dark themes for the app.
 ///
@@ -16,11 +17,16 @@ import 'package:flutter/material.dart';
 ///   theme: AppTheme.light,
 ///   darkTheme: AppTheme.dark,
 /// );
+///
+///
+ColorPalette colorPalette = ColorPalette();
+
 abstract final class AppTheme {
   // The FlexColorScheme defined light mode ThemeData.
   static ThemeData light = FlexThemeData.light(
     // Using FlexColorScheme built-in FlexScheme enum based colors
     scheme: FlexScheme.mallardGreen,
+    // surface: Colors.amber,
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
     blendLevel: 1,
@@ -29,7 +35,10 @@ abstract final class AppTheme {
     bottomAppBarElevation: 2.0,
     // Component theme configurations for light mode.
     subThemesData: const FlexSubThemesData(
+      scaffoldBackgroundSchemeColor:
+          SchemeColor.primary, //To change the backgroundColor of the App
       interactionEffects: true,
+
       tintedDisabledControls: true,
       blendOnLevel: 6,
       useM2StyleDividerInM3: true,
@@ -103,9 +112,14 @@ abstract final class AppTheme {
   static ThemeData dark = FlexThemeData.dark(
     // Using FlexColorScheme built-in FlexScheme enum based colors.
     scheme: FlexScheme.mallardGreen,
+    // surface:
+    //     colorPalette
+    //         .darkColorScheme
+    //         .secondaryContainer, //defines colors for BottomNavigationBar and Cards
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
     blendLevel: 2,
+
     // Convenience direct styling properties.
     appBarStyle: FlexAppBarStyle.background,
     bottomAppBarElevation: 2.0,

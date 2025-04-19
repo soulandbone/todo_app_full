@@ -21,9 +21,11 @@ class TodoItem extends ConsumerWidget {
     var formatter = DateFormat.MMMd();
 
     ColorPalette colorPalette = ColorPalette();
-
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: colorPalette.darkColorScheme.secondaryContainer,
+      color:
+          colorScheme
+              .surface, //colorPalette.darkColorScheme.secondaryContainer,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
 

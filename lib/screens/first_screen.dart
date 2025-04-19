@@ -6,6 +6,7 @@ import 'package:todos_app_full/screens/all_todos.dart';
 import 'package:todos_app_full/screens/completed_todos.dart';
 import 'package:todos_app_full/screens/filtered_todos.dart';
 import 'package:todos_app_full/screens/heat_map_screen.dart';
+
 import 'package:todos_app_full/widgets/drawer.dart';
 
 class FirstScreen extends ConsumerStatefulWidget {
@@ -49,7 +50,9 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
         ],
       ),
       body: activeScreen[_currentIndex],
+
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.amber,
         // selectedItemColor: Colors.red,
         // unselectedItemColor: Colors.white,
         // unselectedLabelStyle: TextStyle(color: Colors.white),
