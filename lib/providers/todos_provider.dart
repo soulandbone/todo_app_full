@@ -43,13 +43,15 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       var keyDate = formatter.format(currentDay);
       // I start from the first day in the possible dates (until today)
       for (int i = 0; i < todosList.length; i++) {
+        print(todosList[i].completedDates);
         if (helpers.isDueToday(todosList[i], currentDay)) {
           // if is dueToday then add it to the summary of that particular day
           if (!summaryData.containsKey(keyDate)) {
             summaryData[keyDate] = {'total': 0, 'completed': 0};
           }
           summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
-          if (todosList[i].isCompleted) {
+          if (todosList[i].completedDates != null &&
+              todosList[i].completedDates!.contains(currentDay)) {
             summaryData[keyDate]!['completed'] =
                 summaryData[keyDate]!['completed']! + 1;
           }
@@ -113,9 +115,27 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
 
   //***************************************************************************** */
   void updateState(Todo todo) async {
+    today = DateTime.now();
+    var normalizedToday = DateTime(today.year, today.month, today.day);
     List<Todo> newState = List.from(state);
 
     var index = state.indexWhere((element) => element.id == todo.id);
+    List<DateTime> newCompletedDates = [];
+    var oldCompletedDates = todo.completedDates ?? [];
+    if (!todo.isCompleted) {
+      // Todo is not completed originally
+      newCompletedDates = [
+        ...oldCompletedDates,
+        normalizedToday,
+      ]; // then I take the previous dates and I add todays day, because the moment this method calls its because there has bbeen a change in the completed status
+    }
+    if (todo.isCompleted) {
+      // if its completed, means that today now its not completed, so today cannot be on the list of daYS
+      newCompletedDates =
+          oldCompletedDates
+              .where((index) => index != today)
+              .toList(); // return a list that doesnt include today
+    }
 
     Todo updatedTodo = Todo(
       title: todo.title,
@@ -125,6 +145,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       firstDueDate: todo.firstDueDate,
       specificDate: todo.specificDate,
       specificDays: todo.specificDays,
+      completedDates: newCompletedDates,
     );
 
     newState[index] = updatedTodo; // new line
