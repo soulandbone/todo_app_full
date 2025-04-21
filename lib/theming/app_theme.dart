@@ -36,18 +36,19 @@ abstract final class AppTheme {
     // Component theme configurations for light mode.
     subThemesData: const FlexSubThemesData(
       scaffoldBackgroundSchemeColor:
-          SchemeColor.primary, //To change the backgroundColor of the App
+          SchemeColor
+              .surfaceContainerHighest, //To change the backgroundColor of the App
       interactionEffects: true,
-
       tintedDisabledControls: true,
       blendOnLevel: 6,
       useM2StyleDividerInM3: true,
       adaptiveElevationShadowsBack: FlexAdaptive.excludeWebAndroidFuchsia(),
       adaptiveAppBarScrollUnderOff: FlexAdaptive.excludeWebAndroidFuchsia(),
       adaptiveRadius: FlexAdaptive.excludeWebAndroidFuchsia(),
+      checkboxSchemeColor: SchemeColor.secondaryFixedDim,
       defaultRadiusAdaptive: 10.0,
-      elevatedButtonSchemeColor: SchemeColor.primaryContainer,
-      elevatedButtonSecondarySchemeColor: SchemeColor.primary,
+      elevatedButtonSchemeColor: SchemeColor.secondary,
+      elevatedButtonSecondarySchemeColor: SchemeColor.secondaryContainer,
       outlinedButtonOutlineSchemeColor: SchemeColor.primary,
       toggleButtonsBorderSchemeColor: SchemeColor.primary,
       segmentedButtonSchemeColor: SchemeColor.primary,
@@ -89,9 +90,12 @@ abstract final class AppTheme {
       searchBarElevation: 4.0,
       searchViewElevation: 4.0,
       searchUseGlobalShape: true,
-      navigationBarSelectedLabelSchemeColor: SchemeColor.primary,
-      navigationBarSelectedIconSchemeColor: SchemeColor.onPrimary,
-      navigationBarIndicatorSchemeColor: SchemeColor.primary,
+      navigationBarBackgroundSchemeColor: SchemeColor.secondary,
+      navigationBarSelectedLabelSchemeColor: SchemeColor.surfaceBright,
+      navigationBarSelectedIconSchemeColor: SchemeColor.onTertiaryContainer,
+      navigationBarIndicatorSchemeColor: SchemeColor.surfaceBright,
+      navigationBarUnselectedIconSchemeColor: SchemeColor.surfaceContainerLow,
+      navigationBarUnselectedLabelSchemeColor: SchemeColor.surfaceBright,
       navigationBarElevation: 1.0,
       navigationRailSelectedLabelSchemeColor: SchemeColor.primary,
       navigationRailSelectedIconSchemeColor: SchemeColor.onPrimary,
@@ -133,6 +137,7 @@ abstract final class AppTheme {
       adaptiveElevationShadowsBack: FlexAdaptive.all(),
       adaptiveAppBarScrollUnderOff: FlexAdaptive.excludeWebAndroidFuchsia(),
       adaptiveRadius: FlexAdaptive.excludeWebAndroidFuchsia(),
+      checkboxSchemeColor: SchemeColor.tertiary,
       defaultRadiusAdaptive: 10.0,
       elevatedButtonSchemeColor: SchemeColor.primaryContainer,
       elevatedButtonSecondarySchemeColor: SchemeColor.primary,
@@ -177,6 +182,7 @@ abstract final class AppTheme {
       searchBarElevation: 4.0,
       searchViewElevation: 4.0,
       searchUseGlobalShape: true,
+      navigationBarBackgroundSchemeColor: SchemeColor.onTertiary,
       navigationBarSelectedLabelSchemeColor: SchemeColor.primary,
       navigationBarSelectedIconSchemeColor: SchemeColor.onPrimary,
       navigationBarIndicatorSchemeColor: SchemeColor.primary,

@@ -51,27 +51,29 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
       ),
       body: activeScreen[_currentIndex],
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.amber,
-        // selectedItemColor: Colors.red,
-        // unselectedItemColor: Colors.white,
-        // unselectedLabelStyle: TextStyle(color: Colors.white),
-        currentIndex: _currentIndex,
-        onTap: (value) {
+      bottomNavigationBar: NavigationBar(
+        //backgroundColor: Colors.amber,
+        onDestinationSelected: (value) {
           setState(() {
             _currentIndex = value;
           });
         },
-
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Full List'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.adb),
-            label: 'Today\'s Todos',
+        selectedIndex: _currentIndex,
+        destinations: [
+          NavigationDestination(
+            icon: Icon(Icons.all_inbox),
+            label: 'All Todos',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Heat Map'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_to_photos),
+          NavigationDestination(
+            icon: Icon(Icons.filter),
+            label: 'FilteredTodos',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_month),
+            label: 'Heat Map',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.done),
             label: 'Completed Todos',
           ),
         ],

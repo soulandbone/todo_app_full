@@ -25,7 +25,7 @@ class TodoItem extends ConsumerWidget {
     return Card(
       color:
           colorScheme
-              .surface, //colorPalette.darkColorScheme.secondaryContainer,
+              .secondaryContainer, //colorPalette.darkColorScheme.secondaryContainer,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
 
