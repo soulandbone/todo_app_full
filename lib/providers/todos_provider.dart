@@ -14,6 +14,8 @@ final todosProvider = StateNotifierProvider((ref) {
 
 FunctionHelpers helpers = FunctionHelpers();
 
+var newDay = false;
+
 class TodosNotifier extends StateNotifier<List<Todo>> {
   TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
@@ -130,7 +132,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       ]; // then I take the previous dates and I add todays day, because the moment this method calls its because there has bbeen a change in the completed status
     }
     if (todo.isCompleted) {
-      // if its completed, means that today now its not completed, so today cannot be on the list of daYS
+      // if its completed, means that today now will be not completed by the time the method call ends, so today cannot be on the list of daYS
       newCompletedDates =
           oldCompletedDates
               .where((index) => index != today)

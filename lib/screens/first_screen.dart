@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todos_app_full/providers/todos_provider.dart';
 import 'package:todos_app_full/screens/add_todo.dart';
 import 'package:todos_app_full/screens/all_todos.dart';
 import 'package:todos_app_full/screens/completed_todos.dart';
