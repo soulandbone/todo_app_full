@@ -41,12 +41,12 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
               ).push(MaterialPageRoute(builder: (ctx) => AddTodo()));
             },
           ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              ref.read(todosProvider.notifier).clearTodos();
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.delete),
+          //   onPressed: () {
+          //     ref.read(todosProvider.notifier).clearTodos();
+          //   },
+          // ),
         ],
       ),
       body: activeScreen[_currentIndex],

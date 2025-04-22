@@ -108,10 +108,10 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
 
   //*************************************************************************** */
 
-  void clearTodos() async {
-    state = [];
-    await Hive.box<Todo>(todoBox).clear();
-  }
+  // void clearTodos() async {  // Eliminated this option as it was too easy to make a mistake and delete all Todos. Will bring it back, when I implement a Alert Dialog to confirm the action.
+  //   state = [];
+  //   await Hive.box<Todo>(todoBox).clear();
+  // }
 
   //***************************************************************************** */
   void updateState(Todo todo) async {
