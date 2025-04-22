@@ -66,7 +66,7 @@ class _FirstScreenState extends ConsumerState<FirstScreen> {
           ),
           NavigationDestination(
             icon: Icon(Icons.filter),
-            label: 'FilteredTodos',
+            label: 'Today\'s todos',
           ),
           NavigationDestination(
             icon: Icon(Icons.calendar_month),

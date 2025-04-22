@@ -29,6 +29,7 @@ abstract final class AppTheme {
     // surface: Colors.amber,
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
+
     blendLevel: 1,
     // Convenience direct styling properties.
     appBarStyle: FlexAppBarStyle.background,
@@ -66,8 +67,8 @@ abstract final class AppTheme {
       fabUseShape: true,
       fabAlwaysCircular: true,
       fabSchemeColor: SchemeColor.tertiary,
-      chipSchemeColor: SchemeColor.shadow,
-      chipSelectedSchemeColor: SchemeColor.primaryFixed,
+      chipSchemeColor: SchemeColor.white,
+      chipSelectedSchemeColor: SchemeColor.secondary,
       chipSecondarySelectedSchemeColor: SchemeColor.tertiary,
       cardRadius: 13.0,
       popupMenuRadius: 6.0,
@@ -158,6 +159,8 @@ abstract final class AppTheme {
       fabUseShape: true,
       fabAlwaysCircular: true,
       fabSchemeColor: SchemeColor.tertiary,
+      chipLabelStyle: TextStyle(color: Colors.red),
+      chipSecondaryLabelStyle: TextStyle(color: Colors.red),
       chipSchemeColor: SchemeColor.shadow,
       chipSelectedSchemeColor: SchemeColor.primaryFixed,
       chipSecondarySelectedSchemeColor: SchemeColor.tertiary,

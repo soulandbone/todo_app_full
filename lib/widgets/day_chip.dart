@@ -3,7 +3,7 @@ import 'package:todos_app_full/helpers/helper_function.dart';
 
 FunctionHelpers helpers = FunctionHelpers();
 
-class DayChip extends StatelessWidget {
+class DayChip extends StatefulWidget {
   const DayChip({
     required this.onChooseDate,
     required this.listOfDays,
@@ -16,18 +16,33 @@ class DayChip extends StatelessWidget {
   final List<bool> listOfDays;
   final Function(String label) onChooseDate;
 
-  bool get isActive => listOfDays[helpers.checkIndexByLabel(label)];
+  @override
+  State<DayChip> createState() => _DayChipState();
+}
+
+class _DayChipState extends State<DayChip> {
+  bool isSelected = false;
+  //bool get isActive => widget.listOfDays[helpers.checkIndexByLabel(widget.label)]; no longer needed, state is now handled internally by the chip. This saves the use of a GestureDetector having a Chip as a child.
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onChooseDate(label);
+    var appTheme = Theme.of(context);
+    final chipLabelStyle = appTheme.textTheme.bodySmall!.copyWith(
+      color: appTheme.colorScheme.onSurface,
+    );
+    return FilterChip(
+      showCheckmark: false,
+      label: Text(widget.label),
+      labelStyle: chipLabelStyle,
+
+      selected: isSelected,
+
+      onSelected: (value) {
+        setState(() {
+          isSelected = value;
+          widget.onChooseDate(widget.label);
+        });
       },
-      child: Chip(
-        label: Text(label),
-        backgroundColor: isActive ? Colors.green : Colors.black,
-      ),
     );
   }
 }
