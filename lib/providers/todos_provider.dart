@@ -17,7 +17,10 @@ FunctionHelpers helpers = FunctionHelpers();
 var newDay = false;
 
 class TodosNotifier extends StateNotifier<List<Todo>> {
-  TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
+  TodosNotifier()
+    : super(
+        loadResettedTodos(),
+      ); // TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
   Map<DateTime, int>? summaryPerDay() {
     Map<String, Map<String, int>> summaryData = {};
@@ -91,6 +94,24 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     return completedTodos;
   }
 
+  static List<Todo> loadResettedTodos() {
+    final Box<DateTime> dayBox = Hive.box<DateTime>(lastDayBox);
+
+    var today = DateTime.now();
+
+    var normalizedToday = DateTime(today.year, today.month, today.day);
+
+    var lastDay = dayBox.get('lastDay', defaultValue: DateTime.now());
+    var todosList = Hive.box<Todo>(todoBox).values.toList();
+
+    if (normalizedToday.isAfter(lastDay!)) {
+      var newState =
+          todosList.map((e) => e.copyWith(isCompleted: false)).toList();
+      todosList = newState;
+    }
+    return todosList;
+  }
+
   //**********************************************************************
   void addTodo(Todo todo) async {
     var newState = [...state, todo];
@@ -130,6 +151,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
         ...oldCompletedDates,
         normalizedToday,
       ]; // then I take the previous dates and I add todays day, because the moment this method calls its because there has bbeen a change in the completed status
+      await Hive.box<DateTime>(lastDayBox).put('lastDay', normalizedToday);
     }
     if (todo.isCompleted) {
       // if its completed, means that today now will be not completed by the time the method call ends, so today cannot be on the list of daYS
@@ -155,6 +177,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     state = newState;
 
     await Hive.box<Todo>(todoBox).putAt(index, updatedTodo);
+    await Hive.box<DateTime>(lastDayBox).put('lastDay', normalizedToday);
   }
 
   //********************************************************************************************* */

@@ -17,6 +17,7 @@ Future<void> main() async {
 
   await Hive.openBox<Todo>(todoBox);
   await Hive.openBox<bool>(themeBox);
+  await Hive.openBox<DateTime>(lastDayBox);
 
   runApp(ProviderScope(child: const MyApp()));
 }

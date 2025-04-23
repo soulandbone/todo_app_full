@@ -32,4 +32,22 @@ class Todo extends HiveObject {
   String toString() {
     return 'Todo{title: $title, isCompleted: $isCompleted, creationDate: $creationDate, firstdueDate: $firstDueDate, frequency: $frequency}';
   }
+
+  Todo copyWith({
+    String? title,
+    bool? isCompleted,
+
+    // Add other properties if needed
+  }) {
+    return Todo(
+      creationDate: creationDate, // ID should remain the same
+      title: title ?? this.title,
+      isCompleted: isCompleted ?? this.isCompleted,
+      frequency: frequency,
+      specificDays: specificDays,
+      specificDate: specificDate,
+      firstDueDate: firstDueDate,
+      completedDates: completedDates,
+    );
+  }
 }
