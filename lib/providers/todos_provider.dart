@@ -22,26 +22,21 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
         loadResettedTodos(),
       ); // TodosNotifier() : super(Hive.box<Todo>(todoBox).values.toList());
 
-  Map<DateTime, int>? summaryPerDay() {
+  Map<DateTime, int> summaryPerDay() {
     Map<String, Map<String, int>> summaryData = {};
     Map<DateTime, int> formattedSummary = {};
 
     var todosList = state;
 
     if (todosList.isEmpty) {
-      return null;
+      return {};
     }
 
     var firstDate = helpers.calculateMostAncientDate(todosList);
     //print('First date is $firstDate');
-    var normalizedFirstDate = DateTime(
-      firstDate.year,
-      firstDate.month,
-      firstDate.day,
-    );
+    var currentDay = helpers.normalizedDate(firstDate);
     // print('Normalized First date is   $normalizedFirstDate');
-    var normalizedToday = DateTime(today.year, today.month, today.day);
-    var currentDay = normalizedFirstDate;
+    var normalizedToday = helpers.normalizedDate(today);
 
     while (currentDay.isBefore(normalizedToday) ||
         currentDay == normalizedToday) {
@@ -50,7 +45,7 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       for (int i = 0; i < todosList.length; i++) {
         print(todosList[i].completedDates);
         if (helpers.isDueToday(todosList[i], currentDay)) {
-          // if is dueToday then add it to the summary of that particular day
+          // if is 'dueToday' then add it to the summary of that particular day
           if (!summaryData.containsKey(keyDate)) {
             summaryData[keyDate] = {'total': 0, 'completed': 0};
           }
@@ -97,11 +92,9 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
   static List<Todo> loadResettedTodos() {
     final Box<DateTime> dayBox = Hive.box<DateTime>(lastDayBox);
 
-    var today = DateTime.now();
+    var normalizedToday = helpers.normalizedDate(today);
 
-    var normalizedToday = DateTime(today.year, today.month, today.day);
-
-    var lastDay = dayBox.get('lastDay', defaultValue: DateTime.now());
+    var lastDay = dayBox.get('lastDay', defaultValue: today);
     var todosList = Hive.box<Todo>(todoBox).values.toList();
 
     if (normalizedToday.isAfter(lastDay!)) {
@@ -138,13 +131,15 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
 
   //***************************************************************************** */
   void updateState(Todo todo) async {
-    today = DateTime.now();
-    var normalizedToday = DateTime(today.year, today.month, today.day);
+    // You can only update completed status if the todo is on Today
+
+    var normalizedToday = helpers.normalizedDate(today);
     List<Todo> newState = List.from(state);
 
     var index = state.indexWhere((element) => element.id == todo.id);
     List<DateTime> newCompletedDates = [];
     var oldCompletedDates = todo.completedDates ?? [];
+    print('state of todo is ${todo.isCompleted}');
     if (!todo.isCompleted) {
       // Todo is not completed originally
       newCompletedDates = [
@@ -153,12 +148,14 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       ]; // then I take the previous dates and I add todays day, because the moment this method calls its because there has bbeen a change in the completed status
       await Hive.box<DateTime>(lastDayBox).put('lastDay', normalizedToday);
     }
+
     if (todo.isCompleted) {
-      // if its completed, means that today now will be not completed by the time the method call ends, so today cannot be on the list of daYS
       newCompletedDates =
           oldCompletedDates
-              .where((index) => index != today)
+              .where((index) => index != normalizedToday)
               .toList(); // return a list that doesnt include today
+
+      print('new completedDates = $newCompletedDates');
     }
 
     Todo updatedTodo = Todo(
@@ -171,9 +168,11 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
       specificDays: todo.specificDays,
       completedDates: newCompletedDates,
     );
-
+    print('completed state of updatedTodo is ${updatedTodo.isCompleted}');
     newState[index] = updatedTodo; // new line
-
+    print(
+      'Completed dates of Updated Todo ${updatedTodo.title} are ${updatedTodo.completedDates}',
+    );
     state = newState;
 
     await Hive.box<Todo>(todoBox).putAt(index, updatedTodo);
@@ -206,5 +205,60 @@ class TodosNotifier extends StateNotifier<List<Todo>> {
     }
 
     return filteredList;
+  }
+
+  Map<DateTime, int> computeSummaryFromTodos(List<Todo> todos) {
+    Map<String, Map<String, int>> summaryData = {};
+    Map<DateTime, int> formattedSummary = {};
+
+    if (todos.isEmpty) {
+      return {};
+    }
+
+    var firstDate = helpers.calculateMostAncientDate(todos);
+    //print('First date is $firstDate');
+    var currentDay = helpers.normalizedDate(firstDate);
+    // print('Normalized First date is   $normalizedFirstDate');
+    var normalizedToday = helpers.normalizedDate(today);
+
+    while (currentDay.isBefore(normalizedToday) ||
+        currentDay == normalizedToday) {
+      var keyDate = formatter.format(currentDay);
+      // I start from the first day in the possible dates (until today)
+      for (int i = 0; i < todos.length; i++) {
+        print(todos[i].completedDates);
+        if (helpers.isDueToday(todos[i], currentDay)) {
+          // if is 'dueToday' then add it to the summary of that particular day
+          if (!summaryData.containsKey(keyDate)) {
+            summaryData[keyDate] = {'total': 0, 'completed': 0};
+          }
+          summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
+          if (todos[i].completedDates != null &&
+              todos[i].completedDates!.contains(currentDay)) {
+            summaryData[keyDate]!['completed'] =
+                summaryData[keyDate]!['completed']! + 1;
+          }
+        }
+      }
+      currentDay = currentDay.add(Duration(days: 1));
+    }
+
+    DateFormat format = DateFormat('M/d/yyyy');
+
+    summaryData.forEach((key, value) {
+      DateTime keyDT = format.parse(
+        key,
+      ); // transform a String into a DateTime object
+      if (!formattedSummary.containsKey(keyDT) && value['total'] != null) {
+        // so it doesnt repeat the calculation, because it looks for each of the Dates
+        if (value['total'] == 0) {
+          formattedSummary[keyDT] = 0;
+        }
+        formattedSummary[keyDT] =
+            ((value['completed'])! / (value['total']!) * 100).toInt();
+      }
+    });
+
+    return formattedSummary;
   }
 }

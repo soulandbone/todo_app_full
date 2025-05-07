@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todos_app_full/providers/summary_provider.dart';
+//import 'package:todos_app_full/providers/summary_provider.dart';
 import 'package:todos_app_full/providers/todos_provider.dart';
 
 class HeatMapScreen extends ConsumerWidget {
@@ -8,7 +10,7 @@ class HeatMapScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var summary = ref.watch(todosProvider.notifier).summaryPerDay();
+    var summary = ref.watch(summaryProvider);
     print('summary from heat map is $summary');
     return Scaffold(
       appBar: AppBar(),

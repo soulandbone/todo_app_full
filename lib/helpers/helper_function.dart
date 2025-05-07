@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:todos_app_full/models/todo.dart';
 
+var formatter = DateFormat.yMd();
+
 class FunctionHelpers {
   int checkIndexByLabel(String label) {
     // based on a label,it returns which index the label comes from considering a boolean list of 7 elements.
@@ -182,5 +184,64 @@ class FunctionHelpers {
       return true;
     }
     return false;
+  }
+
+  DateTime normalizedDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  Map<DateTime, int> computeSummaryFromTodos(List<Todo> todos) {
+    Map<String, Map<String, int>> summaryData = {};
+    Map<DateTime, int> formattedSummary = {};
+
+    if (todos.isEmpty) {
+      return {};
+    }
+
+    var firstDate = calculateMostAncientDate(todos);
+    //print('First date is $firstDate');
+    var currentDay = normalizedDate(firstDate);
+    // print('Normalized First date is   $normalizedFirstDate');
+    var normalizedToday = normalizedDate(DateTime.now());
+
+    while (currentDay.isBefore(normalizedToday) ||
+        currentDay == normalizedToday) {
+      var keyDate = formatter.format(currentDay);
+      // I start from the first day in the possible dates (until today)
+      for (int i = 0; i < todos.length; i++) {
+        print(todos[i].completedDates);
+        if (isDueToday(todos[i], currentDay)) {
+          // if is 'dueToday' then add it to the summary of that particular day
+          if (!summaryData.containsKey(keyDate)) {
+            summaryData[keyDate] = {'total': 0, 'completed': 0};
+          }
+          summaryData[keyDate]!['total'] = summaryData[keyDate]!['total']! + 1;
+          if (todos[i].completedDates != null &&
+              todos[i].completedDates!.contains(currentDay)) {
+            summaryData[keyDate]!['completed'] =
+                summaryData[keyDate]!['completed']! + 1;
+          }
+        }
+      }
+      currentDay = currentDay.add(Duration(days: 1));
+    }
+
+    DateFormat format = DateFormat('M/d/yyyy');
+
+    summaryData.forEach((key, value) {
+      DateTime keyDT = format.parse(
+        key,
+      ); // transform a String into a DateTime object
+      if (!formattedSummary.containsKey(keyDT) && value['total'] != null) {
+        // so it doesnt repeat the calculation, because it looks for each of the Dates
+        if (value['total'] == 0) {
+          formattedSummary[keyDT] = 0;
+        }
+        formattedSummary[keyDT] =
+            ((value['completed'])! / (value['total']!) * 100).toInt();
+      }
+    });
+
+    return formattedSummary;
   }
 }
